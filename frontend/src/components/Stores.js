@@ -16,12 +16,11 @@ const Stores = () => {
         <div>
             <div className='page-title'>Our stores</div>
             <div className="stores-container">
-                {error && <p>Error fetching stores: {error.message}</p>}
+                {error && <p className="error-message">Error fetching stores: {error.message}</p>}
                 {stores.map(store => (
-                    <div key={store.storeId}>
-                        <h2>{store.country} address</h2>
-                        <p>{store.country}, {store.city}, {store.address}</p>
-                        <br /><hr />
+                    <div key={store.storeId} className="store-card">
+                        <h2 className="store-title">{store.country} Address</h2>
+                        <p className="store-info">{store.country}, {store.city}, {store.address}</p>
                     </div>
                 ))}
             </div>

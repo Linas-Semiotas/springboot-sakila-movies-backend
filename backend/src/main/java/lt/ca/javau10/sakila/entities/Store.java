@@ -1,9 +1,7 @@
 package lt.ca.javau10.sakila.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name="store")
 public class Store {
@@ -19,9 +17,17 @@ public class Store {
 	public Byte getStoreId() {
 		return storeId;
 	}
+	
+	public void setStoreId(Byte storeId) {
+		this.storeId = storeId;
+	}
 
 	public Address getAddress() {
 		return address;
+	}
+	
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 }
 

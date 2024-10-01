@@ -8,6 +8,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  color: #333;
 }
 
 ::-webkit-scrollbar{
@@ -21,6 +22,11 @@ body {
 ::-webkit-scrollbar-thumb{
   background: #666;
   height: 65px;
+}
+
+.error-message {
+  color: red; /* Highlight error message */
+  margin-bottom: 20px;
 }
 
 .app-container {
@@ -40,13 +46,20 @@ body {
   z-index: 1000;
 }
 
+.header-space-150{
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .header-logo{
-  width: auto;
   height: 55px;
-  padding: 5px 50px;
+  padding: 5px 0px;
 }
 
 .nav {
+  width: calc(100% - 300px);
   display: flex;
   height: 40px;
   padding: 0;

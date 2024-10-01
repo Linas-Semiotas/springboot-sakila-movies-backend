@@ -1,5 +1,6 @@
 package lt.ca.javau10.sakila.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,23 +32,22 @@ public class MovieService {
 	}
     
     private MovieDto convertToDto(Movie movie) {
-        List<String> actors = movie.getActor().stream()
-        		.map(actor -> Utils.capitalize(actor.getFirstName()) + " " + Utils.capitalize(actor.getLastName()))
-	            .collect(Collectors.toList());
-        return new MovieDto(
-    		movie.getId(),
-    		Utils.capitalize(movie.getTitle()),
-    		movie.getDescription(),
-            movie.getReleaseYear(),
-            movie.getFilmLength(),
-            movie.getRating(),            
-            movie.getLanguage().getName(),
-            movie.getCategory().getName(),
-            actors
-        );
-    }
-    
-    public List<MovieDto> getMoviesByDescription(String description) {
-        return repository.findByDescriptionContaining(description);
+    	List<String> actors = movie.getActor() != null 
+	        ? movie.getActor().stream()
+	            .map(actor -> Utils.capitalize(actor.getFirstName()) + " " + Utils.capitalize(actor.getLastName()))
+	            .collect(Collectors.toList())
+	        : Collections.emptyList();
+
+	    return new MovieDto(
+	        movie.getId(),
+	        Utils.capitalize(movie.getTitle()),
+	        movie.getDescription(),
+	        movie.getReleaseYear(),
+	        movie.getFilmLength(),
+	        movie.getRating(),            
+	        movie.getLanguage() != null ? movie.getLanguage().getName() : null,
+	        movie.getCategory() != null ? movie.getCategory().getName() : null,
+	        actors
+	    );
     }
 }

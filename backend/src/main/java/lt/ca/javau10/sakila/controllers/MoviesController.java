@@ -29,9 +29,4 @@ public class MoviesController {
     public MovieDto getMovieById(@PathVariable Short id) {
         return service.getMovieById(id);
     }
-    
-    @GetMapping("/description/{descr}")
-    public List<MovieDto> getMovieById(@PathVariable String descr) {
-        return service.getMoviesByDescription(descr);
-    }
 }

@@ -1,6 +1,7 @@
 package lt.ca.javau10.sakila.entities;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -58,102 +59,31 @@ public class Movie {
     )
 	private List<Actor> actors;
 
-	public Short getId() {
-		return id;
-	}
+	public Movie() {}
 
-	public String getTitle() {
-		return title;
-	}
+	public Short getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public Integer getReleaseYear() { return releaseYear; }
+    public Short getFilmLength() { return filmLength; }
+    public Rating getRating() { return rating; }
+    public BigDecimal getRentalRate() { return rentalRate; }
+    public BigDecimal getReplacementCost() { return replacementCost; }
+    public Short getRentalDuration() { return rentalDuration; }
+    public Language getLanguage() { return language; }
+    public Category getCategory() { return category; }
+    public List<Actor> getActor() { return actors; }
 
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getReleaseYear() {
-		return releaseYear;
-	}
-	
-	public Short getFilmLength() {
-		return filmLength;
-	}
-
-	public Rating getRating() {
-		return rating;
-	}
-
-	public BigDecimal getRentalRate() {
-		return rentalRate;
-	}
-
-	public BigDecimal getReplacementCost() {
-		return replacementCost;
-	}
-
-	public Short getRentalDuration() {
-		return rentalDuration;
-	}
-
-	public Language getLanguage() {
-		return language;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public List<Actor> getActor() {
-		return actors;
-	}
-
-	public void setId(Short id) {
-		this.id = id;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setReleaseYear(Integer releaseYear) {
-		this.releaseYear = releaseYear;
-	}
-
-	public void setFilmLength(Short filmLength) {
-		this.filmLength = filmLength;
-	}
-
-	public void setRating(Rating rating) {
-		this.rating = rating;
-	}
-
-	public void setRentalRate(BigDecimal rentalRate) {
-		this.rentalRate = rentalRate;
-	}
-
-	public void setReplacementCost(BigDecimal replacementCost) {
-		this.replacementCost = replacementCost;
-	}
-
-	public void setRentalDuration(Short rentalDuration) {
-		this.rentalDuration = rentalDuration;
-	}
-
-	public void setLanguage(Language language) {
-		this.language = language;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
-	public void setActors(List<Actor> actors) {
-		this.actors = actors;
-	}
-	
-	
+    public void setId(Short id) { this.id = id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setReleaseYear(Integer releaseYear) { this.releaseYear = releaseYear; }
+    public void setFilmLength(Short filmLength) { this.filmLength = filmLength; }
+    public void setRating(Rating rating) { this.rating = rating; }
+    public void setRentalRate(BigDecimal rentalRate) { this.rentalRate = rentalRate; }
+    public void setReplacementCost(BigDecimal replacementCost) { this.replacementCost = replacementCost; }
+    public void setRentalDuration(Short rentalDuration) { this.rentalDuration = rentalDuration; }
+    public void setLanguage(Language language) { this.language = language; }
+    public void setCategory(Category category) { this.category = category; }
+    public void setActors(List<Actor> actors) { this.actors = actors != null ? actors : new ArrayList<>(); }
 }
-

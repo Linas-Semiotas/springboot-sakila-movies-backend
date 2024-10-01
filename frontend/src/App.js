@@ -8,20 +8,23 @@ import Movie from './components/Movie';
 import Rental from './components/Rental';
 import Stores from './components/Stores';
 import Login from './components/Login';
+import Register from './components/Register';
+import Notes from './components/Notes';
 
 const App = () => {
     return (
         <Router>
            <div className="app-container">
                 <header className="header">
-                    <img className="header-logo" src={logo} alt="logo" />
+                    <div className="header-space-150"><img className="header-logo" src={logo} alt="logo" /></div>
                     <nav className="nav">
                         <Link to="/home">Home</Link>
                         <Link to="/movies">Movies</Link>
                         <Link to="/rental">Rental</Link>
                         <Link to="/stores">Stores</Link>
+                        <Link to="/TODO">TODO</Link>
                     </nav>
-                    <Link to="/login" className="signIn">Sign in</Link>
+                    <div className="header-space-150"><Link to="/login" className="signIn">Sign in</Link></div>
                 </header>
 
                 <div className="content">
@@ -33,8 +36,9 @@ const App = () => {
                         <Route path="/rental" element={<Rental />} />
                         <Route path="/stores" element={<Stores />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/TODO" element={<Notes />} />
                     </Routes>
-                    
                 </div>
 
                 <footer className="footer">

@@ -1,9 +1,7 @@
 package lt.ca.javau10.sakila.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "language")
 public class Language {

@@ -1,62 +1,73 @@
 .movies-container {
+    max-width: 900px;
     text-align: center;
-    padding-bottom: 20px;
-}
-
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    padding: 20px;
-    width: 90%;
-    max-width: 1200px;
     margin: auto;
-}
-
-.gallery .item {
-    width: 100%;
-    padding-top: 100%;
-    position: relative;
-    background-size: cover;
-    background-position: center;
-    border: 2px solid #ddd;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    transition: transform 0.3s ease;
-    overflow: hidden;
-    background-color: #eee;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.gallery-header{
+    max-width: 900px;
+    margin: auto;
+    height: 50px;
+    background-color: #f4f4f4;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.filter-button{
+    width: 100px;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    margin-inline: 10px;
+    padding: 8px;
+    align-items: center;
+    border-radius: 8px;
     cursor: pointer;
-    text-decoration: none;
-    color: inherit;
 }
 
-.gallery .item-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+.filter-button:hover{
+    background-color: #ddd;
 }
 
-.gallery .item:hover {
-    transform: scale(1.05);
+.filter-container{
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: row;
+    z-index: 50;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    padding: 5px 0px;
+    gap: 15px;
 }
 
-@media (max-width: 768px) {
-    .gallery {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
+.filter-options{
+    padding-left: 20px;
+    text-align: left;
 }
 
-@media (max-width: 480px) {
-    .gallery {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    }
+.filter-options select{
+    width: 110px;
+}
+
+.search{
+    width: 300px;
+    height: auto;
 }
 
 .pagination{
     display: flex;
     justify-content: center;
-    padding-bottom: 20px;
+    padding: 20px;
 }
 
 .MuiPaginationItem-root.Mui-selected {

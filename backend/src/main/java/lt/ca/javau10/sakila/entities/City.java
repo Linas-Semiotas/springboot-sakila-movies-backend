@@ -17,6 +17,13 @@ public class City {
     @JoinColumn(name = "country_id")
     private Country country;
 
+	public City() {}
+
+	public City(String city, Country country) {
+		this.city = city;
+		this.country = country;
+	}
+
 	public Short getCityId() {
 		return cityId;
 	}

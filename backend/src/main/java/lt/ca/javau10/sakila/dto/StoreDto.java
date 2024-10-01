@@ -1,7 +1,5 @@
 package lt.ca.javau10.sakila.dto;
-import lombok.Data;
 
-@Data
 public class StoreDto {
 
 	private Byte storeId;

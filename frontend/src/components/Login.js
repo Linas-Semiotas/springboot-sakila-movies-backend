@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Login.css';
 
 const Login = () => {
-    const [username, setUsername] = useState('marysmith');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -50,7 +50,8 @@ const Login = () => {
                     <button className="login-button" type="submit">Login</button>
                     {error && <p className="error-message">{error}</p>}
                     <p className="register-link">
-                        Don't have an account? Create an account
+                        Don't have an account?&nbsp;
+                        <Link to={`/register`}>Create an account</Link>
                     </p>
                 </form>
             </div>

@@ -1,0 +1,66 @@
+.movies-container {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.gallery .item {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    background-color: #eee;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.gallery .item-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.gallery .item:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.MuiPaginationItem-root.Mui-selected {
+    background-color: #666 !important;
+    color: white !important;
+    border: none !important;
+}

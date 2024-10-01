@@ -1,0 +1,27 @@
+.home {
+    margin: 0 auto;
+    padding-bottom: 20px; 
+}
+
+.home header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.home header h2 {
+    margin: 0.5em 0 0;
+    font-size: 1.2em;
+}
+
+.home main {
+    padding: 2em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.home p {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+    color: #666;
+    text-indent: 40px;
+}

@@ -6,14 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lt.ca.javau10.sakila.dto.RegisterDto;
-import lt.ca.javau10.sakila.services.RegisterService;
+import lt.ca.javau10.sakila.services.AuthService;
 
 @RestController
 @RequestMapping("/register")
 @CrossOrigin(origins = "http://localhost:3000")
-public class RegisterController {
+public class AuthController {
+	
 	@Autowired
-    private RegisterService service;
+    private AuthService service;
 	
     @PostMapping
     public ResponseEntity<String> registerUser(@RequestBody RegisterDto registerDto) {

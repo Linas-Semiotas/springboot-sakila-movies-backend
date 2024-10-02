@@ -6,12 +6,16 @@ const Notes = () => {
     const [todoItems, setTodoItems] = useState([]);
 
     useEffect(() => {
-        const storedTodos = JSON.parse(localStorage.getItem('todoItems')) || [];
-        setTodoItems(storedTodos);
+        const storedTodos = localStorage.getItem('todoItems');
+        if (storedTodos && storedTodos !== "[]") {
+            setTodoItems(JSON.parse(storedTodos));
+        }
     }, []);
 
     useEffect(() => {
-        localStorage.setItem('todoItems', JSON.stringify(todoItems));
+        if (todoItems.length > 0) {
+            localStorage.setItem('todoItems', JSON.stringify(todoItems));
+        }
     }, [todoItems]);
 
     const handleInputChange = (e) => {
@@ -21,14 +25,14 @@ const Notes = () => {
     const addTodo = () => {
         const trimmedTodo = newTodo.trim();
         if (trimmedTodo) {
-            setTodoItems([...todoItems, trimmedTodo]);
+            setTodoItems([...todoItems, trimmedTodo]); // Add new todo to state
             setNewTodo(''); // Clear the input after adding
         }
     };
 
     const deleteTodo = (taskText) => {
         const updatedTodos = todoItems.filter(item => item !== taskText);
-        setTodoItems(updatedTodos);
+        setTodoItems(updatedTodos); // Update state and trigger localStorage sync
     };
 
     return (

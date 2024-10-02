@@ -14,7 +14,7 @@ import lt.ca.javau10.sakila.repositories.CustomerRepository;
 import lt.ca.javau10.sakila.repositories.UserRepository;
 
 @Service
-public class RegisterService {
+public class AuthService {
 
     @Autowired
     private AddressRepository addressRepository;

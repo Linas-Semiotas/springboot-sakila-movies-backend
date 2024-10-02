@@ -17,7 +17,7 @@ import lt.ca.javau10.sakila.services.MovieService;
 @CrossOrigin(origins = "http://localhost:3000")
 public class MoviesController {
 
-    @Autowired
+	@Autowired
     private MovieService service;
 
     @GetMapping

@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import lt.ca.javau10.sakila.dto.StoreDto;
+import lt.ca.javau10.sakila.models.dto.StoreDto;
 import lt.ca.javau10.sakila.services.StoreService;
 
 @WebMvcTest(StoresController.class)
@@ -46,7 +46,7 @@ public class StoresControllerTest {
 
     @Test
     public void getAllStores_ShouldReturnListOfStores() throws Exception {
-        mockMvc.perform(get("/stores")
+        mockMvc.perform(get("/api/stores")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));

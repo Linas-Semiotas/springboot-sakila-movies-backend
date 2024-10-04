@@ -12,11 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import lt.ca.javau10.sakila.dto.StoreDto;
-import lt.ca.javau10.sakila.entities.Address;
-import lt.ca.javau10.sakila.entities.City;
-import lt.ca.javau10.sakila.entities.Country;
-import lt.ca.javau10.sakila.entities.Store;
+import lt.ca.javau10.sakila.models.Address;
+import lt.ca.javau10.sakila.models.City;
+import lt.ca.javau10.sakila.models.Country;
+import lt.ca.javau10.sakila.models.Store;
+import lt.ca.javau10.sakila.models.dto.StoreDto;
 import lt.ca.javau10.sakila.repositories.StoreRepository;
 
 

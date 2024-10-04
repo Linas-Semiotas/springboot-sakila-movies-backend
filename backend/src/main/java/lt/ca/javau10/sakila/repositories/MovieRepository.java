@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import lt.ca.javau10.sakila.entities.Movie;
+import lt.ca.javau10.sakila.models.Movie;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Short> {

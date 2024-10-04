@@ -5,12 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import lt.ca.javau10.sakila.dto.StoreDto;
+import lt.ca.javau10.sakila.models.dto.StoreDto;
 import lt.ca.javau10.sakila.services.StoreService;
 
 @RestController
-@RequestMapping("/stores")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/stores")
 public class StoresController {
 	@Autowired
     private StoreService service;

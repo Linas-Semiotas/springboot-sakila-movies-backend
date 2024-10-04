@@ -3,6 +3,9 @@ package lt.ca.javau10.sakila.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Optional;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,11 +13,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import lt.ca.javau10.sakila.dto.RegisterDto;
-import lt.ca.javau10.sakila.entities.Address;
-import lt.ca.javau10.sakila.entities.City;
-import lt.ca.javau10.sakila.entities.Customer;
-import lt.ca.javau10.sakila.entities.User;
+import lt.ca.javau10.sakila.models.Address;
+import lt.ca.javau10.sakila.models.City;
+import lt.ca.javau10.sakila.models.Customer;
+import lt.ca.javau10.sakila.models.User;
+import lt.ca.javau10.sakila.models.dto.RegisterDto;
 import lt.ca.javau10.sakila.repositories.AddressRepository;
 import lt.ca.javau10.sakila.repositories.CustomerRepository;
 import lt.ca.javau10.sakila.repositories.UserRepository;
@@ -46,9 +49,9 @@ public class AuthServiceTest {
         // Arrange
     	RegisterDto registerDto = new RegisterDto("First", "Last", "email@example.com", (byte) 1, "existingUser", "password");
 
-        User existingUser = new User("existingUser", "password", null);
+        User existingUser = new User("existingUser", "password", null, Set.of("USER"));
         
-        when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
+        when(userRepository.findByUsername("existingUser")).thenReturn(Optional.of(existingUser));
 
         // Act
         String result = authService.register(registerDto);
@@ -72,7 +75,7 @@ public class AuthServiceTest {
         Address defaultAddress = new Address("Default Address", "Default District", city);
         when(addressRepository.save(any(Address.class))).thenReturn(defaultAddress);
 
-        User newUser = new User("newUser", "encodedPassword", null);
+        User newUser = new User("newUser", "encodedPassword", null, Set.of("USER"));
         when(userRepository.save(any(User.class))).thenReturn(newUser);
 
         Customer savedCustomer = new Customer("First", "Last", "email@example.com", (byte) 1, defaultAddress);

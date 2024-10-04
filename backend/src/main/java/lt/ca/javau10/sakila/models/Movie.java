@@ -1,4 +1,4 @@
-package lt.ca.javau10.sakila.entities;
+package lt.ca.javau10.sakila.models;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

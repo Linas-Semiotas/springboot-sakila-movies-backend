@@ -1,17 +1,16 @@
-package lt.ca.javau10.sakila.services;
+package lt.ca.javau10.sakila.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import lt.ca.javau10.sakila.entities.User;
 
 public class MyUserDetails implements UserDetails, Serializable {
 
-	 private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
     private User user;
 
@@ -21,7 +20,8 @@ public class MyUserDetails implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        // Example: You can manage roles in your User entity and return them here
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
@@ -51,6 +51,6 @@ public class MyUserDetails implements UserDetails, Serializable {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return true;  // You could add an `enabled` field in your `User` entity
     }
 }

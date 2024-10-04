@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lt.ca.javau10.sakila.dto.MovieDto;
-import lt.ca.javau10.sakila.entities.Movie;
+import lt.ca.javau10.sakila.models.Movie;
+import lt.ca.javau10.sakila.models.dto.MovieDto;
 import lt.ca.javau10.sakila.repositories.MovieRepository;
 import lt.ca.javau10.sakila.utils.Utils;
 

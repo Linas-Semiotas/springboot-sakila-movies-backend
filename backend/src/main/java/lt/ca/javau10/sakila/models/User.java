@@ -1,4 +1,9 @@
-package lt.ca.javau10.sakila.entities;
+package lt.ca.javau10.sakila.models;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
@@ -11,21 +16,28 @@ public class User {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password")
+    @JsonIgnore
+    @Column(name = "password", nullable = false)
     private String password;
 
     @OneToOne(mappedBy = "user")
     private Customer customer;
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles = new HashSet<>();
 
     public User() {}
 
-    public User(String username, String password, Customer customer) {
+    public User(String username, String password, Customer customer, Set<String> roles) {
         this.username = username;
         this.password = password;
         this.customer = customer;
+        this.roles = roles;
     }
 
 	public Integer getCustomerId() {
@@ -58,5 +70,13 @@ public class User {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+	
+	public Set<String> getRoles() {
+		return roles;
+	}
+
+	public void setCustomer(Set<String> roles) {
+		this.roles = roles;
 	}
 }

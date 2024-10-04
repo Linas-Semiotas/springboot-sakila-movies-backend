@@ -14,8 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import lt.ca.javau10.sakila.dto.MovieDto;
-import lt.ca.javau10.sakila.entities.Movie;
+import lt.ca.javau10.sakila.models.Movie;
+import lt.ca.javau10.sakila.models.dto.MovieDto;
 import lt.ca.javau10.sakila.repositories.MovieRepository;
 
 public class MovieServiceTest {

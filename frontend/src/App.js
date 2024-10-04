@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import './styles/App.css';
 import logo from './assets/images/sakila-logo.png';
@@ -8,10 +8,30 @@ import Movie from './components/Movie';
 import Rental from './components/Rental';
 import Stores from './components/Stores';
 import Login from './components/Login';
+import Logout from './components/Logout';
 import Register from './components/Register';
 import Notes from './components/Notes';
+import PrivateRoute from './components/PrivateRoute';
+import { getToken, logout } from './services/authService';
+
 
 const App = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const token = getToken();
+        setIsLoggedIn(!!token);
+    }, []);
+
+    const handleLogout = () => {
+        logout();
+        setIsLoggedIn(false);
+    };
+
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true);
+    };
+
     return (
         <Router>
            <div className="app-container">
@@ -24,7 +44,13 @@ const App = () => {
                         <Link to="/stores">Stores</Link>
                         <Link to="/TODO">TODO</Link>
                     </nav>
-                    <div className="header-space-150"><Link to="/login" className="signIn">Sign in</Link></div>
+                    <div className="header-space-150">
+                        {isLoggedIn ? (
+                            <div onClick={handleLogout} className="signIn">Logout</div>
+                        ) : (
+                            <Link to="/login" className="signIn">Sign in</Link>
+                        )}
+                    </div>
                 </header>
 
                 <div className="content">
@@ -33,9 +59,10 @@ const App = () => {
                         <Route path="/home" element={<Home />} />
                         <Route path="/movies" element={<Movies />} />
                         <Route path="/movies/:id" element={<Movie />} />
-                        <Route path="/rental" element={<Rental />} />
+                        <Route path="/rental" element={<PrivateRoute><Rental /></PrivateRoute>} />
                         <Route path="/stores" element={<Stores />} />
-                        <Route path="/login" element={<Login />} />
+                        <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess}/>} />
+                        <Route path="/logout" element={<Logout />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/TODO" element={<Notes />} />
                     </Routes>

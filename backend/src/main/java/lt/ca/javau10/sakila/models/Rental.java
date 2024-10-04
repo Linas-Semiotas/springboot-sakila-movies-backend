@@ -1,4 +1,4 @@
-package lt.ca.javau10.sakila.entities;
+package lt.ca.javau10.sakila.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

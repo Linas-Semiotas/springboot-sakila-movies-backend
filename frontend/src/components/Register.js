@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Register.css';
 import storeService from '../services/storeService';
+import { register } from '../services/authService';
 
 const Register = () => {
     const [firstName, setFirstName] = useState('');
@@ -17,20 +17,18 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // Clear error before submitting
         try {
-            const response = await axios.post('http://localhost:8080/register', {
-                firstName,
-                lastName,
-                email,
-                storeId: selectedStore,
-                username,
-                password
-            });
+            const response = await register(username, password, firstName, lastName, email, selectedStore);
             if (response.status === 200) {
-                navigate('/home');
+                navigate('/home'); // Navigate to home on successful registration
             }
         } catch (error) {
-            setError('Error during registration');
+            if (error.response && error.response.data) {
+                setError(error.response.data.message || 'Error during registration');
+            } else {
+                setError('Error during registration');
+            }
         }
     };
 
@@ -42,19 +40,19 @@ const Register = () => {
 
     return (
         <div className="register-container">
-            <div className='page-title'>Register</div>
+            <div className="page-title">Register</div>
             <div className="register-wrapper">
                 <form onSubmit={handleSubmit}>
-                <div className="input-group">
+                    <div className="input-group">
                         <input
-                            placeholder='First name'
+                            placeholder="First name"
                             type="text"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             required
                         />
                         <input
-                            placeholder='Last name'
+                            placeholder="Last name"
                             type="text"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
@@ -63,8 +61,8 @@ const Register = () => {
                     </div>
                     <div className="input-single">
                         <input
-                            placeholder='Email'
-                            type="text"
+                            placeholder="Email"
+                            type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -72,20 +70,20 @@ const Register = () => {
                     </div>
                     <div className="input-group">
                         <label>Store location</label>
-                        <select id="store"
+                        <select
                             value={selectedStore}
-                            onChange={(e) => {setSelectedStore(e.target.value);}}
+                            onChange={(e) => setSelectedStore(e.target.value)}
                             required
                         >
                             <option value="">Select a store</option>
-                            {stores.map((store, index) => (
-                                <option key={index} value={store.storeId}>{store.country}</option>
+                            {stores.map((store) => (
+                                <option key={store.storeId} value={store.storeId}>{store.country}</option>
                             ))}
                         </select>
                     </div>
                     <div className="input-single">
                         <input
-                            placeholder='Username'
+                            placeholder="Username"
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
@@ -94,7 +92,7 @@ const Register = () => {
                     </div>
                     <div className="input-single">
                         <input
-                            placeholder='Password'
+                            placeholder="Password"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -102,7 +100,7 @@ const Register = () => {
                         />
                     </div>
                     <button className="register-button" type="submit">Register</button>
-                    {error && <p className="error-message">{error}</p>}
+                    {error && <p className="error-message">{error}</p>} {/* Render the error message */}
                 </form>
             </div>
         </div>

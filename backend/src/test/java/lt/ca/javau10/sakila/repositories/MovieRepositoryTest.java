@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import lt.ca.javau10.sakila.entities.Movie;
+import lt.ca.javau10.sakila.models.Movie;
 
 @DataJpaTest
 public class MovieRepositoryTest {

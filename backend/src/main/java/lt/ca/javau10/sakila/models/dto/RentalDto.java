@@ -1,4 +1,4 @@
-package lt.ca.javau10.sakila.dto;
+package lt.ca.javau10.sakila.models.dto;
 
 import java.math.BigDecimal;
 

@@ -1,34 +1,36 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../services/authService';
 import '../styles/Login.css';
 
-const Login = () => {
+const Login = ({onLoginSuccess}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        setError('');
         try {
-            const response = await axios.post('http://localhost:8080/login', {
-                username,
-                password
-            });
-            if (response.status === 200) {
-                navigate('/home');
-            }
+          const data = await login(username, password);
+          localStorage.setItem('token', data.token);
+          onLoginSuccess();
+          navigate('/home');
         } catch (error) {
+          if (error.response && error.response.status === 401) {
             setError('Invalid username or password');
+          } else {
+            setError('An error occurred. Please try again.');
+          }
         }
-    };
+      };
 
     return (
         <div className="login-container">
             <div className='page-title'>Login</div>
             <div className="login-wrapper">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleLogin}>
                     <div className="input-group">
                         <input
                             placeholder='Username'

@@ -18,8 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import lt.ca.javau10.sakila.dto.MovieDto;
-import lt.ca.javau10.sakila.entities.Rating;
+import lt.ca.javau10.sakila.models.Rating;
+import lt.ca.javau10.sakila.models.dto.MovieDto;
 import lt.ca.javau10.sakila.services.MovieService;
 
 @WebMvcTest(MoviesController.class)

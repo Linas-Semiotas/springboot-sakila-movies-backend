@@ -1,8 +1,8 @@
-package lt.ca.javau10.sakila.dto;
+package lt.ca.javau10.sakila.models.dto;
 
 import java.util.List;
 
-import lt.ca.javau10.sakila.entities.Rating;
+import lt.ca.javau10.sakila.models.Rating;
 
 public class MovieDto {
 	private Short id;

@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lt.ca.javau10.sakila.dto.RegisterDto;
+import lt.ca.javau10.sakila.models.dto.RegisterDto;
 import lt.ca.javau10.sakila.services.AuthService;
 
 @WebMvcTest(AuthController.class)
@@ -46,7 +46,7 @@ public class AuthControllerTest {
     	RegisterDto registerDto = new RegisterDto("John", "Doe", "email@example.com", (byte) 1, "username", "password");
 
         // Perform the POST request
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerDto)))
                 .andExpect(status().isOk())
@@ -64,7 +64,7 @@ public class AuthControllerTest {
         doThrow(new RuntimeException("Registration error")).when(authService).register(registerDto);
 
         // Perform the POST request
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerDto)))
                 .andExpect(status().isInternalServerError())  // Expect HTTP 500

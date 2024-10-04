@@ -19,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import lt.ca.javau10.sakila.dto.RentalDto;
+import lt.ca.javau10.sakila.models.dto.RentalDto;
 import lt.ca.javau10.sakila.services.RentalService;
 
 @WebMvcTest(RentalController.class)

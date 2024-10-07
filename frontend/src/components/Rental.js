@@ -66,7 +66,7 @@ const Rental = () => {
                     <input className='search' placeholder='Search' value={searchTerm} 
                         onChange={(e) => {setSearchTerm(e.target.value); setPage(0);}}/>
                 </div>
-                {error && <p>Error fetching rentals: {error.message}</p>}
+                {error && <p className="error-message">Error fetching rentals: {error.message}</p>}
                 <Paper>
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 480 }} aria-label="rental table">

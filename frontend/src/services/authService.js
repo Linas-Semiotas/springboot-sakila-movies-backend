@@ -2,6 +2,10 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/api/auth';
 
+export const getToken = () => {
+    return localStorage.getItem('token');
+};
+
 export const login = async (username, password) => {
     const response = await axios.post(`${API_URL}/login`, {
         username,
@@ -24,28 +28,6 @@ export const register = async (username, password, firstName, lastName, email, s
     return response;
 };
 
-export const getToken = () => {
-    return localStorage.getItem('token');
-};
-
 export const logout = async () => {
     localStorage.removeItem('token');
 };
-
-// export const logout = async () => {
-//     const token = getToken();
-//     if (token) {
-//         try {
-//             await axios.post(`${API_URL}/logout`, {}, {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 },
-//                 withCredentials: true
-//             });
-//         } catch (error) {
-//             console.error("Logout error:", error);
-//         } finally {
-//             localStorage.removeItem('token');
-//         }
-//     }
-// };

@@ -43,7 +43,7 @@ public class AuthControllerTest {
     
     @Test
     public void registerUser_ShouldReturnSuccessMessage() throws Exception {
-    	RegisterDto registerDto = new RegisterDto("John", "Doe", "email@example.com", (byte) 1, "username", "password");
+    	RegisterDto registerDto = new RegisterDto("John", "Doe", "email@example.com", (byte) 1, "username", "password", 0.0);
 
         // Perform the POST request
         mockMvc.perform(post("/api/auth/register")
@@ -58,7 +58,7 @@ public class AuthControllerTest {
 
     @Test
     public void registerUser_ShouldReturnErrorMessage_OnException() throws Exception {
-        RegisterDto registerDto = new RegisterDto("John", "Doe", "email@example.com", (byte) 1, "username", "password");
+        RegisterDto registerDto = new RegisterDto("John", "Doe", "email@example.com", (byte) 1, "username", "password", 0.0);
 
         // Simulate the service throwing an exception
         doThrow(new RuntimeException("Registration error")).when(authService).register(registerDto);

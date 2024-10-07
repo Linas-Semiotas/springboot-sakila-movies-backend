@@ -1,15 +1,12 @@
 .stores-container {
-    text-align: center;
-    padding: 20px 0;
-}
-
-.stores-container hr{
     max-width: 900px;
+    text-align: center;
+    margin: auto;
+    padding: 20px 0;
 }
 
 .store-card {
     margin: 10px auto;
-    max-width: 900px;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;

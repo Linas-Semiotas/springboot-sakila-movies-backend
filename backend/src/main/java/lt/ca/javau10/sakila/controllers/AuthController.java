@@ -72,31 +72,20 @@ public class AuthController {
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
-        	// Log successful login
             logger.info("User logged in successfully: " + loginDto.getUsername());
-            // Return JwtResponse with the token, username, and roles
             return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), null, roles));
         } catch (BadCredentialsException e) {
-            // Log failed login attempt
             logger.warn("Invalid login attempt: " + loginDto.getUsername());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new MessageResponse("Invalid login credentials"));
         } catch (DisabledException e) {
-            // Handle if user account is disabled
             logger.warn("Disabled account login attempt: " + loginDto.getUsername());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new MessageResponse("User account is disabled"));
         } catch (Exception e) {
-            // General exception handling
             logger.error("Error during login: " + loginDto.getUsername(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MessageResponse("Error logging in"));
         }
     }
-    
-//    @PostMapping("/logout")
-//    public ResponseEntity<String> logout() {
-//    	logger.warn("Logout endpoint hit");
-//        return ResponseEntity.ok("Logout successful");
-//    }
 }

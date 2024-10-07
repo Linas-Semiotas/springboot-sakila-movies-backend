@@ -25,14 +25,40 @@ body {
 }
 
 .error-message {
-  color: red; /* Highlight error message */
-  margin-bottom: 20px;
+  color: #721c24;
+  text-align: center;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.success-message {
+  color: #23721c;
+  text-align: center;
+  background-color: #d7f8da;
+  border: 1px solid #d1f5c6;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+/* Colors */
+
+.color-red{
+  color: red!important;
+}
+.color-red-200-hover:hover{
+  color: rgb(200, 0, 0)!important;
 }
 
 /* HEADER */
@@ -49,8 +75,33 @@ body {
 .header-space-150{
   width: 150px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+}
+
+.header-space-150-start{
+  justify-content: center;
+}
+
+.header-space-150-end{
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.nav-end-buttons{
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-end-button{
+  text-decoration: none;
+  color: white;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+}
+
+.nav-end-button:hover {
+  color: #aaaaaa;
 }
 
 .header-logo{
@@ -75,12 +126,6 @@ body {
 
 .nav a:hover {
   color: #aaaaaa;
-}
-
-.signIn{
-  text-decoration: none;
-  color: white;
-  padding: 0.5rem 2rem;
 }
 
 /* MAIN CONTENT */

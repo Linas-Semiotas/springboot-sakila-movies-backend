@@ -47,9 +47,9 @@ public class AuthServiceTest {
     @Test
     void testRegister_UsernameAlreadyExists() {
         // Arrange
-    	RegisterDto registerDto = new RegisterDto("First", "Last", "email@example.com", (byte) 1, "existingUser", "password");
+    	RegisterDto registerDto = new RegisterDto("First", "Last", "email@example.com", (byte) 1, "existingUser", "password", 0.0);
 
-        User existingUser = new User("existingUser", "password", null, Set.of("USER"));
+        User existingUser = new User("existingUser", "password", null, Set.of("USER"), 0.0);
         
         when(userRepository.findByUsername("existingUser")).thenReturn(Optional.of(existingUser));
 
@@ -65,7 +65,7 @@ public class AuthServiceTest {
     @Test
     void testRegister_SuccessfulRegistration() {
         // Arrange
-    	RegisterDto registerDto = new RegisterDto("First", "Last", "email@example.com", (byte) 1, "newUser", "password");
+    	RegisterDto registerDto = new RegisterDto("First", "Last", "email@example.com", (byte) 1, "newUser", "password", 0.0);
         when(userRepository.findByUsername("newUser")).thenReturn(null); // Username does not exist
         when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
 
@@ -75,7 +75,7 @@ public class AuthServiceTest {
         Address defaultAddress = new Address("Default Address", "Default District", city);
         when(addressRepository.save(any(Address.class))).thenReturn(defaultAddress);
 
-        User newUser = new User("newUser", "encodedPassword", null, Set.of("USER"));
+        User newUser = new User("newUser", "encodedPassword", null, Set.of("USER"), 0.0);
         when(userRepository.save(any(User.class))).thenReturn(newUser);
 
         Customer savedCustomer = new Customer("First", "Last", "email@example.com", (byte) 1, defaultAddress);

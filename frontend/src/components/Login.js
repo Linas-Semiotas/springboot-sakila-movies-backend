@@ -2,12 +2,19 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
 import '../styles/Login.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Login = ({onLoginSuccess}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -31,23 +38,38 @@ const Login = ({onLoginSuccess}) => {
             <div className='page-title'>Login</div>
             <div className="login-wrapper">
                 <form onSubmit={handleLogin}>
-                    <div className="input-group">
+                    <div className="input-single">
                         <input
                             placeholder='Username'
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            maxLength={30}
                             required
                         />
                     </div>
                     <div className="input-group">
                         <input
                             placeholder='Password'
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            maxLength={64}
                             required
                         />
+                        <span 
+                            onClick={togglePasswordVisibility}
+                            style={{
+                                position: 'absolute',
+                                right: '10px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                cursor: 'pointer',
+                                fontSize: '14px'
+                            }}
+                        >
+                            <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                        </span>
                     </div>
                     <button className="login-button" type="submit">Login</button>
                     {error && <p className="error-message">{error}</p>}

@@ -45,6 +45,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
     
+    //Registration functionality
 	public String register(RegisterDto registerDto) {
 		Optional<User> existingUser = userRepository.findByUsername(registerDto.getUsername());
 		if (existingUser.isPresent()) {
@@ -58,7 +59,7 @@ public class AuthService {
         Address savedAddress = addressRepository.save(defaultAddress);
 
         String encryptedPassword = passwordEncoder.encode(registerDto.getPassword());
-        User user = new User(registerDto.getUsername(), encryptedPassword, null, Set.of("USER"));
+        User user = new User(registerDto.getUsername(), encryptedPassword, null, Set.of("USER"), 0.0);
         User savedUser = userRepository.save(user);
 
         Customer customer = new Customer(registerDto.getFirstName(), registerDto.getLastName(), registerDto.getEmail(), registerDto.getStoreId(), savedAddress);
@@ -68,10 +69,12 @@ public class AuthService {
         return "Registration successful";
     }
 
+	//Finding user in repository
     public Optional<User> getUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
 	
+    //Login functionality
     public String login(String username, String password) {
         try {
         	Authentication authentication = authenticationManager.authenticate(
@@ -82,5 +85,5 @@ public class AuthService {
         } catch (BadCredentialsException e) {
             return "Invalid username or password";
         }
-    }
+    }    
 }

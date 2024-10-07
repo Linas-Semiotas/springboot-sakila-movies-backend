@@ -23,7 +23,7 @@ public class UserRepositoryTest {
     @BeforeEach
     public void setUp() {
         // Initialize a new user before each test
-        user = new User("john_doe", "password123", null, Set.of("USER"));
+        user = new User("john_doe", "password123", null, Set.of("USER"), 0.0);
     }
 
     @Test

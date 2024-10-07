@@ -41,7 +41,8 @@ public class SecurityConfig {
             }))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
-                .requestMatchers("/api/rental").hasRole("USER")
+                .requestMatchers("/api/user/**").hasRole("USER")
+                .requestMatchers("/api/rental/**").authenticated()
                 .anyRequest().permitAll()
             )
             .exceptionHandling(exception -> exception

@@ -104,10 +104,10 @@ const Movies = () => {
                             </div>
                         </div>
                     )}
+                    {error && <p  className="error-message">{error.message}</p>}
                 </div>
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={2} sx={{ width: "100%", margin: 0, paddingRight: 2}}>
-                        {error && <p color="error">{error.message}</p>}
                         {currentMoviesPage.map(movie => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
                                 <Link to={`/movies/${movie.id}`} style={{ textDecoration: 'none' }}>

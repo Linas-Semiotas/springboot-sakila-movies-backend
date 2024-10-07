@@ -30,14 +30,18 @@ public class User {
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
+    
+    @Column(name = "balance", nullable = false)
+    private Double balance;
 
     public User() {}
 
-    public User(String username, String password, Customer customer, Set<String> roles) {
+    public User(String username, String password, Customer customer, Set<String> roles, Double balance) {
         this.username = username;
         this.password = password;
         this.customer = customer;
         this.roles = roles;
+        this.balance = balance;
     }
 
 	public Integer getCustomerId() {
@@ -78,5 +82,13 @@ public class User {
 
 	public void setCustomer(Set<String> roles) {
 		this.roles = roles;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
 	}
 }

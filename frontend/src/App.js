@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate, useNavigate } from 'react-router-dom';
 import './styles/App.css';
 import logo from './assets/images/sakila-logo.png';
 import Home from './components/Home';
@@ -8,15 +8,17 @@ import Movie from './components/Movie';
 import Rental from './components/Rental';
 import Stores from './components/Stores';
 import Login from './components/Login';
-import Logout from './components/Logout';
 import Register from './components/Register';
+import User from './components/User';
 import Notes from './components/Notes';
+import NotFound from './components/NotFound';
 import PrivateRoute from './components/PrivateRoute';
 import { getToken, logout } from './services/authService';
 
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = getToken();
@@ -26,6 +28,7 @@ const App = () => {
     const handleLogout = () => {
         logout();
         setIsLoggedIn(false);
+        navigate('/login');
     };
 
     const handleLoginSuccess = () => {
@@ -33,47 +36,57 @@ const App = () => {
     };
 
     return (
-        <Router>
-           <div className="app-container">
-                <header className="header">
-                    <div className="header-space-150"><img className="header-logo" src={logo} alt="logo" /></div>
-                    <nav className="nav">
-                        <Link to="/home">Home</Link>
-                        <Link to="/movies">Movies</Link>
-                        <Link to="/rental">Rental</Link>
-                        <Link to="/stores">Stores</Link>
-                        <Link to="/TODO">TODO</Link>
-                    </nav>
-                    <div className="header-space-150">
-                        {isLoggedIn ? (
-                            <div onClick={handleLogout} className="signIn">Logout</div>
-                        ) : (
-                            <Link to="/login" className="signIn">Sign in</Link>
-                        )}
-                    </div>
-                </header>
-
-                <div className="content">
-                    <Routes>
-                        <Route path="/" element={<Navigate to="/home" />} />
-                        <Route path="/home" element={<Home />} />
-                        <Route path="/movies" element={<Movies />} />
-                        <Route path="/movies/:id" element={<Movie />} />
-                        <Route path="/rental" element={<PrivateRoute><Rental /></PrivateRoute>} />
-                        <Route path="/stores" element={<Stores />} />
-                        <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess}/>} />
-                        <Route path="/logout" element={<Logout />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/TODO" element={<Notes />} />
-                    </Routes>
+        <div className="app-container">
+            <header className="header">
+                <div className="header-space-150 header-space-150-start"><img className="header-logo" src={logo} alt="logo" /></div>
+                <nav className="nav">
+                    <Link to="/home">Home</Link>
+                    <Link to="/movies">Movies</Link>
+                    <Link to="/rental">Rental</Link>
+                    <Link to="/stores">Stores</Link>
+                    <Link to="/TODO">TODO</Link>
+                </nav>
+                <div className="header-space-150 header-space-150-end">
+                    {isLoggedIn ? (
+                        <div className="nav-end-buttons">
+                            <Link className="nav-end-button" to="/user">Profile</Link>
+                            <div onClick={handleLogout} className="nav-end-button color-red color-red-200-hover">Logout</div>
+                        </div>                        
+                    ) : (
+                        <Link to="/login" className="nav-end-button">Sign in</Link>
+                    )}
                 </div>
+            </header>
 
-                <footer className="footer">
-                    <p>© 2024 Sakila Movies</p>
-                </footer>
+            <div className="content">
+                <Routes>
+                    <Route path="/" element={<Navigate to="/home" />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/movies" element={<Movies />} />
+                    <Route path="/movies/:id" element={<Movie />} />
+                    <Route path="/rental" element={<PrivateRoute><Rental /></PrivateRoute>} />
+                    <Route path="/stores" element={<Stores />} />
+                    <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess}/>} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/user/*" element={<User />} />
+                    <Route path="/TODO" element={<Notes />} />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
             </div>
+
+            <footer className="footer">
+                <p>© 2024 Sakila Movies</p>
+            </footer>
+        </div>
+    );
+};
+
+const AppWrapper = () => {
+    return (
+        <Router>
+            <App />
         </Router>
     );
 };
 
-export default App;
+export default AppWrapper;

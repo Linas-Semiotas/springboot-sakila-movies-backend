@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/Register.css';
 import storeService from '../services/storeService';
 import { register } from '../services/authService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Register = () => {
     const [firstName, setFirstName] = useState('');
@@ -12,8 +14,13 @@ const Register = () => {
     const [selectedStore, setSelectedStore] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,6 +56,7 @@ const Register = () => {
                             type="text"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
+                            maxLength={50}
                             required
                         />
                         <input
@@ -56,6 +64,7 @@ const Register = () => {
                             type="text"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
+                            maxLength={50}
                             required
                         />
                     </div>
@@ -65,6 +74,7 @@ const Register = () => {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            maxLength={254}
                             required
                         />
                     </div>
@@ -87,20 +97,35 @@ const Register = () => {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            maxLength={30}
                             required
                         />
                     </div>
-                    <div className="input-single">
+                    <div className="input-group">
                         <input
                             placeholder="Password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            maxLength={64}
                             required
                         />
+                        <span 
+                            onClick={togglePasswordVisibility}
+                            style={{
+                                position: 'absolute',
+                                right: '10px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                cursor: 'pointer',
+                                fontSize: '14px'
+                            }}
+                        >
+                            <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                        </span>
                     </div>
                     <button className="register-button" type="submit">Register</button>
-                    {error && <p className="error-message">{error}</p>} {/* Render the error message */}
+                    {error && <p className="error-message">{error}</p>}
                 </form>
             </div>
         </div>

@@ -10,16 +10,18 @@ public class RegisterDto {
     private Byte storeId;
     private String username;
     private String password;
+    private Double balance = 0.0;
     
 	public RegisterDto() {}
 
-	public RegisterDto(String firstName, String lastName, String email, Byte storeId, String username, String password) {
+	public RegisterDto(String firstName, String lastName, String email, Byte storeId, String username, String password, Double balance) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.storeId = storeId;
 		this.username = username;
 		this.password = password;
+		this.balance = balance;
 	}
 
 	public String getFirstName() {
@@ -68,6 +70,14 @@ public class RegisterDto {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
 	}
 
 	@Override

@@ -23,6 +23,9 @@ public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
+    
+    @Value("${jwtExpirationMs}")
+    private int jwtExpirationMs;
 
     // Convert the secret key string into a SecretKey object
     private SecretKey getSigningKey() {
@@ -43,7 +46,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())  // Token issue date
-                .setExpiration(new Date(System.currentTimeMillis() + 36000000))  // Token expiration
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))  // Token expiration
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)  // Use SecretKey and HS512
                 .compact();
     }

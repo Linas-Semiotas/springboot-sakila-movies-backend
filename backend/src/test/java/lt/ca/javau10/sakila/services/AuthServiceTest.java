@@ -72,7 +72,7 @@ public class AuthServiceTest {
         City city = new City();
         city.setCityId((short) 1);
 
-        Address defaultAddress = new Address("Default Address", "Default District", city);
+        Address defaultAddress = new Address("Default Address", "Default District", "888-6666", city);
         when(addressRepository.save(any(Address.class))).thenReturn(defaultAddress);
 
         User newUser = new User("newUser", "encodedPassword", null, Set.of("USER"), 0.0);

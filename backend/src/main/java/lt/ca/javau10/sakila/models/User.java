@@ -44,6 +44,10 @@ public class User {
         this.balance = balance;
     }
 
+	public Integer getUserId() {
+		return userId;
+	}
+
 	public Integer getCustomerId() {
 		return userId;
 	}

@@ -40,7 +40,7 @@ public class SecurityConfig {
                 return configuration;
             }))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                .requestMatchers("/api/auth/*").permitAll()
                 .requestMatchers("/api/user/**").hasRole("USER")
                 .requestMatchers("/api/rental/**").authenticated()
                 .anyRequest().permitAll()

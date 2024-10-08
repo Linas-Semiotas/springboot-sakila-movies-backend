@@ -17,15 +17,19 @@ public class Address {
     @Column(name = "district")
     private String district;
     
+    @Column(name = "phone")
+    private String phone;
+    
     @OneToOne
     @JoinColumn(name = "city_id", referencedColumnName = "city_id")
     private City city;
 
 	public Address() {}
 
-	public Address(String address, String district, City city) {
+	public Address(String address, String district, String phone, City city) {
 		this.address = address;
 		this.district = district;
+		this.phone = phone;
 		this.city = city;
 	}
 
@@ -51,6 +55,14 @@ public class Address {
 
 	public void setDistrict(String district) {
 		this.district = district;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public City getCity() {

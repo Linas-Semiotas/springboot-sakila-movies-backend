@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lt.ca.javau10.sakila.models.dto.ChangePasswordDto;
+import lt.ca.javau10.sakila.models.dto.PersonalInfoDto;
 import lt.ca.javau10.sakila.security.responses.MessageResponse;
 import lt.ca.javau10.sakila.services.UserService;
 
@@ -24,11 +26,9 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    //Changing password
-    @PostMapping("/change-password")
+    @PostMapping("/security/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto changePasswordDto, Principal principal) {
         try {
-            // Use the principal to get the logged-in user's username
             String username = principal.getName();
             service.changePassword(username, changePasswordDto.getCurrentPassword(), changePasswordDto.getNewPassword());
             return ResponseEntity.ok(new MessageResponse("Password updated successfully"));
@@ -50,5 +50,21 @@ public class UserController {
         Double amount = request.get("amount");
         Double newBalance = service.addBalance(principal.getName(), amount);
         return ResponseEntity.ok(newBalance);
+    }
+    
+    @GetMapping("/profile/personal-info")
+    public ResponseEntity<PersonalInfoDto> getPersonalInfo(Principal principal) {
+        String username = principal.getName(); // Get the username from the Principal
+        int userId = service.getUserIdByUsername(username); // Fetch user ID based on the username
+        PersonalInfoDto personalInfo = service.getPersonalInfo(userId);
+        return ResponseEntity.ok(personalInfo);
+    }
+
+    @PutMapping("/profile/personal-info")
+    public ResponseEntity<String> updatePersonalInfo(@RequestBody PersonalInfoDto personalInfoDto, Principal principal) {
+        String username = principal.getName(); // Get the username from the Principal
+        int userId = service.getUserIdByUsername(username); // Fetch user ID based on the username
+        service.updatePersonalInfo(userId, personalInfoDto);
+        return ResponseEntity.ok("Personal information updated successfully");
     }
 }

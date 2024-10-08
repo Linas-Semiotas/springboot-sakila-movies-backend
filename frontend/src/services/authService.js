@@ -6,12 +6,24 @@ export const getToken = () => {
     return localStorage.getItem('token');
 };
 
+axios.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response && error.response.status === 401) {
+            alert("Session expired. Please log in again.");
+            localStorage.removeItem('token'); // Clear the token
+            window.location.href = "/login";  // Redirect to login page
+        }
+        return Promise.reject(error);
+    }
+);
+
 export const login = async (username, password) => {
     const response = await axios.post(`${API_URL}/login`, {
         username,
         password
     }, {
-        withCredentials: true  // Include credentials like cookies or tokens if necessary
+        withCredentials: true
     });
     return response.data;
 };

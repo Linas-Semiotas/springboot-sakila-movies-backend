@@ -55,7 +55,7 @@ public class AuthService {
         City defaultCity = new City();
         defaultCity.setCityId((short) 1);
 		
-        Address defaultAddress = new Address("Default Address", "Default District", defaultCity);
+        Address defaultAddress = new Address("", "", "", defaultCity);
         Address savedAddress = addressRepository.save(defaultAddress);
 
         String encryptedPassword = passwordEncoder.encode(registerDto.getPassword());

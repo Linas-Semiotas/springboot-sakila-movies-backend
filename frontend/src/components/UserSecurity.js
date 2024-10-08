@@ -46,7 +46,7 @@ const UserSecurity = () => {
             <form className="security-form" onSubmit={handleSubmit}>
                 <div className="input-group">
                     <label>Current Password</label>
-                    <div className="password-wrapper">
+                    <div className="input-wrapper">
                         <input
                             placeholder='Current password'
                             type={showPassword ? "text" : "password"}
@@ -62,7 +62,7 @@ const UserSecurity = () => {
                 </div>
                 <div className="input-group">
                     <label>New Password</label>
-                    <div className="password-wrapper">
+                    <div className="input-wrapper">
                         <input
                             placeholder='New password'
                             type={showPassword ? "text" : "password"}
@@ -78,7 +78,7 @@ const UserSecurity = () => {
                 </div>
                 <div className="input-group">
                     <label>Repeat New Password</label>
-                    <div className="password-wrapper">
+                    <div className="input-wrapper">
                         <input
                             placeholder='New password'
                             type={showPassword ? "text" : "password"}

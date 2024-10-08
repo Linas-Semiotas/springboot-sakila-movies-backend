@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lt.ca.javau10.sakila.models.dto.AddressInfoDto;
 import lt.ca.javau10.sakila.models.dto.ChangePasswordDto;
 import lt.ca.javau10.sakila.models.dto.PersonalInfoDto;
 import lt.ca.javau10.sakila.security.responses.MessageResponse;
@@ -54,17 +55,33 @@ public class UserController {
     
     @GetMapping("/profile/personal-info")
     public ResponseEntity<PersonalInfoDto> getPersonalInfo(Principal principal) {
-        String username = principal.getName(); // Get the username from the Principal
-        int userId = service.getUserIdByUsername(username); // Fetch user ID based on the username
+        String username = principal.getName();
+        int userId = service.getUserIdByUsername(username);
         PersonalInfoDto personalInfo = service.getPersonalInfo(userId);
         return ResponseEntity.ok(personalInfo);
     }
 
     @PutMapping("/profile/personal-info")
     public ResponseEntity<String> updatePersonalInfo(@RequestBody PersonalInfoDto personalInfoDto, Principal principal) {
-        String username = principal.getName(); // Get the username from the Principal
-        int userId = service.getUserIdByUsername(username); // Fetch user ID based on the username
+        String username = principal.getName();
+        int userId = service.getUserIdByUsername(username);
         service.updatePersonalInfo(userId, personalInfoDto);
         return ResponseEntity.ok("Personal information updated successfully");
+    }
+    
+    @GetMapping("/profile/address-info")
+    public ResponseEntity<AddressInfoDto> getAddressInfo(Principal principal) {
+    	String username = principal.getName();
+        int userId = service.getUserIdByUsername(username);
+        AddressInfoDto addressInfo = service.getAddressInfo(userId);
+        return ResponseEntity.ok(addressInfo);
+    }
+
+    @PutMapping("/profile/address-info")
+    public ResponseEntity<String> updateAddressInfo(@RequestBody AddressInfoDto addressInfoDto, Principal principal) {
+    	String username = principal.getName();
+        int userId = service.getUserIdByUsername(username);
+        service.updateAddressInfo(userId, addressInfoDto);
+        return ResponseEntity.ok("Address information updated successfully");
     }
 }

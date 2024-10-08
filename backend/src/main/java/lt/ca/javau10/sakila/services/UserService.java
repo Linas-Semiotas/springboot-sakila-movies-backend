@@ -8,25 +8,39 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lt.ca.javau10.sakila.exceptions.ResourceNotFoundException;
 import lt.ca.javau10.sakila.models.Address;
+import lt.ca.javau10.sakila.models.City;
+import lt.ca.javau10.sakila.models.Country;
 import lt.ca.javau10.sakila.models.Customer;
 import lt.ca.javau10.sakila.models.User;
+import lt.ca.javau10.sakila.models.dto.AddressInfoDto;
 import lt.ca.javau10.sakila.models.dto.PersonalInfoDto;
 import lt.ca.javau10.sakila.repositories.AddressRepository;
+import lt.ca.javau10.sakila.repositories.CityRepository;
+import lt.ca.javau10.sakila.repositories.CountryRepository;
 import lt.ca.javau10.sakila.repositories.CustomerRepository;
 import lt.ca.javau10.sakila.repositories.UserRepository;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private CustomerRepository  customerRepository;
-    private AddressRepository  addressRepository;
+    private final UserRepository userRepository;
+    private final CustomerRepository  customerRepository;
+    private final AddressRepository  addressRepository;
+    private final CityRepository cityRepository;
+    private final CountryRepository countryRepository;
     private final PasswordEncoder passwordEncoder;
     
-    public UserService(UserRepository userRepository, CustomerRepository  customerRepository, AddressRepository  addressRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+    		CustomerRepository  customerRepository,
+    		AddressRepository  addressRepository,
+    		CityRepository cityRepository,
+    		CountryRepository countryRepository,
+    		PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.customerRepository = customerRepository;
 		this.addressRepository = addressRepository;
+		this.cityRepository = cityRepository;
+		this.countryRepository = countryRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
     
@@ -96,5 +110,56 @@ public class UserService {
 
         customerRepository.save(customer);
         addressRepository.save(address);
+    }
+    
+    //Get address information based on user ID
+    public AddressInfoDto getAddressInfo(int userId) {
+        Customer customer = customerRepository.findByUser_UserId(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        Address address = addressRepository.findById(customer.getAddress().getAddressId())
+            .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
+
+        return new AddressInfoDto(
+            address.getAddress(),
+            address.getDistrict(),
+            address.getPostalCode(),
+            address.getCity().getCity(),
+            address.getCity().getCountry().getCountry()
+        );
+    }
+
+    //Update address information
+    public void updateAddressInfo(int userId, AddressInfoDto addressInfoDto) {
+        Customer customer = customerRepository.findByUser_UserId(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        Address address = addressRepository.findById(customer.getAddress().getAddressId())
+            .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
+
+        address.setAddress(addressInfoDto.getAddress());
+        address.setDistrict(addressInfoDto.getDistrict());
+        address.setPostalCode(addressInfoDto.getPostalCode());
+        
+        City city = address.getCity();
+        
+        city.setCity(addressInfoDto.getCity());
+        
+        Country newCountry = countryRepository.findByCountry(addressInfoDto.getCountry())
+                .orElseGet(() -> countryRepository.save(new Country(addressInfoDto.getCountry())));
+
+            // Get the old country before updating the city
+            Country oldCountry = city.getCountry();
+
+            // Update the city to associate it with the new country
+            city.setCountry(newCountry);
+            cityRepository.save(city);
+
+            // Check if the old country is no longer used by any city
+            if (!cityRepository.existsByCountry(oldCountry)) {
+                countryRepository.delete(oldCountry);
+            }
+
+            addressRepository.save(address);
     }
 }

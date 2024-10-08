@@ -10,9 +10,7 @@ axios.interceptors.response.use(
     response => response,
     error => {
         if (error.response && error.response.status === 401) {
-            alert("Session expired. Please log in again.");
             localStorage.removeItem('token'); // Clear the token
-            window.location.href = "/login";  // Redirect to login page
         }
         return Promise.reject(error);
     }

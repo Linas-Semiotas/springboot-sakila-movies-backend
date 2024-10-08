@@ -10,6 +10,7 @@ import Stores from './components/Stores';
 import Login from './components/Login';
 import Register from './components/Register';
 import User from './components/User';
+import Admin from './components/Admin';
 import Notes from './components/Notes';
 import NotFound from './components/NotFound';
 import PrivateRoute from './components/PrivateRoute';
@@ -68,7 +69,8 @@ const App = () => {
                     <Route path="/stores" element={<Stores />} />
                     <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess}/>} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/user/*" element={<User />} />
+                    <Route path="/user/*" element={<PrivateRoute><User /></PrivateRoute>} />
+                    <Route path="/admin/*" element={<PrivateRoute><Admin /></PrivateRoute>} />
                     <Route path="/TODO" element={<Notes />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>

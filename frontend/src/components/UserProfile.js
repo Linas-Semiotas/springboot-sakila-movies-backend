@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { getPersonalInfo, updatePersonalInfo } from '../services/userService';
+import { getPersonalInfo, updatePersonalInfo, getAddressInfo, updateAddressInfo } from '../services/userService';
 import '../styles/User.css';
 
 const UserProfile = () => {
     const [personalInfoError, setPersonalInfoError] = useState(null);
-    //const [addressError, setAddressError] = useState(null);
+    const [addressError, setAddressError] = useState(null);
     const [personalInfoSuccess, setPersonalInfoSuccess] = useState(null);
-    //const [addressSuccess, setAddressSuccess] = useState(null);
+    const [addressSuccess, setAddressSuccess] = useState(null);
+
     const [personalInfo, setPersonalInfo] = useState({
         firstName: '',
         lastName: '',
         email: '',
         phone: ''
     });
+    const [addressInfo, setAddressInfo] = useState({
+        address: '',
+        district: '',
+        postalCode: '',
+        city: '',
+        country: ''
+    });
 
     useEffect(() => {
+
         getPersonalInfo()
             .then(response => {
                 setPersonalInfo(response);
@@ -24,14 +33,30 @@ const UserProfile = () => {
                 console.error("Error fetching personal information:", error);
                 setPersonalInfoError("There was an error loading your personal information. Please try again.");
             });
+
+        getAddressInfo()
+        .then(response => {
+            setAddressInfo(response);
+            setAddressError(null);
+        })
+        .catch(error => {
+            console.error("Error fetching address information:", error);
+            setAddressError("There was an error loading your address information. Please try again.");
+        });
+
     }, []);
 
-    const handleChange = (e) => {
+    const handlePersonalInfoChange = (e) => {
         const { name, value } = e.target;
         setPersonalInfo(prevInfo => ({ ...prevInfo, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleAddressInfoChange = (e) => {
+        const { name, value } = e.target;
+        setAddressInfo(prevInfo => ({ ...prevInfo, [name]: value }));
+    };
+
+    const handlePersonalInfoSubmit = (e) => {
         e.preventDefault();
         updatePersonalInfo(personalInfo)
             .then(response => {
@@ -44,11 +69,24 @@ const UserProfile = () => {
             });
     };
 
+    const handleAddressInfoSubmit = (e) => {
+        e.preventDefault();
+        updateAddressInfo(addressInfo)
+            .then(() => {
+                setAddressSuccess('Address information updated successfully');
+                setAddressError(null);
+            })
+            .catch(error => {
+                setAddressError("There was an error updating your address information. Please try again.");
+                setAddressSuccess(null);
+            });
+    };
+
     return (
         <div>
             <div className="user-container">
                 <h2>Personal Info</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handlePersonalInfoSubmit}>
                     <div className="input-group">
                         <label>First Name:</label>
                         <div className="input-wrapper">
@@ -57,7 +95,7 @@ const UserProfile = () => {
                                 type="text" 
                                 name="firstName" 
                                 value={personalInfo.firstName || ''} 
-                                onChange={handleChange} 
+                                onChange={handlePersonalInfoChange} 
                             />
                         </div>
                     </div>
@@ -69,7 +107,7 @@ const UserProfile = () => {
                                 type="text" 
                                 name="lastName" 
                                 value={personalInfo.lastName || ''} 
-                                onChange={handleChange} 
+                                onChange={handlePersonalInfoChange} 
                             />
                         </div>
                     </div>
@@ -81,7 +119,7 @@ const UserProfile = () => {
                                 type="email" 
                                 name="email" 
                                 value={personalInfo.email || ''} 
-                                onChange={handleChange} 
+                                onChange={handlePersonalInfoChange} 
                             />
                         </div>
                     </div>
@@ -93,7 +131,7 @@ const UserProfile = () => {
                                 type="tel" 
                                 name="phone" 
                                 value={personalInfo.phone || ''} 
-                                onChange={handleChange} 
+                                onChange={handlePersonalInfoChange} 
                             />
                         </div>
                     </div>
@@ -102,11 +140,64 @@ const UserProfile = () => {
                 {personalInfoError && <p className="error-message">{personalInfoError}</p>}
                 {personalInfoSuccess && <p className="success-message">{personalInfoSuccess}</p>}
             </div>
+            
             <div className="user-container">
-                <h2>Address</h2>
-                placeholder for address
-                {/* {addressError && <p className="error-message">{addressError}</p>} */}
-                {/* {addressSuccess && <p className="success-message">{addressSuccess}</p>} */}
+                <h2>Address Info</h2>
+                <form onSubmit={handleAddressInfoSubmit}>
+                    <div className="input-group">
+                        <label>Address:</label>
+                        <input 
+                            placeholder='Address'
+                            type="text" 
+                            name="address" 
+                            value={addressInfo.address || ''} 
+                            onChange={handleAddressInfoChange} 
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label>District:</label>
+                        <input 
+                            placeholder='District'
+                            type="text" 
+                            name="district" 
+                            value={addressInfo.district || ''} 
+                            onChange={handleAddressInfoChange} 
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label>Postal Code:</label>
+                        <input 
+                            placeholder='Postal Code'
+                            type="text" 
+                            name="postalCode" 
+                            value={addressInfo.postalCode || ''} 
+                            onChange={handleAddressInfoChange} 
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label>City:</label>
+                        <input 
+                            placeholder='City'
+                            type="text" 
+                            name="city" 
+                            value={addressInfo.city || ''} 
+                            onChange={handleAddressInfoChange} 
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label>Country:</label>
+                        <input 
+                            placeholder='Country'
+                            type="text" 
+                            name="country" 
+                            value={addressInfo.country || ''} 
+                            onChange={handleAddressInfoChange} 
+                        />
+                    </div>
+                    <button className="submit-button" type="submit">Save Changes</button>
+                </form>
+                {addressError && <p className="error-message">{addressError}</p>}
+                {addressSuccess && <p className="success-message">{addressSuccess}</p>}
             </div>
         </div>
     );

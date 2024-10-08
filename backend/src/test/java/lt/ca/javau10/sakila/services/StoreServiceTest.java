@@ -54,8 +54,8 @@ public class StoreServiceTest {
         city2.setCityId((short) 2);
 
         // Create sample Address objects
-        address1 = new Address("123 Main St", "Manhattan", "888-5555" , city1);
-        address2 = new Address("456 Elm St", "Downtown", "777-6666", city2);
+        address1 = new Address("123 Main St", "Manhattan", "888-5555", "66666", city1);
+        address2 = new Address("456 Elm St", "Downtown", "777-6666", "33333", city2);
 
         // Create sample Store objects
         store1 = new Store();

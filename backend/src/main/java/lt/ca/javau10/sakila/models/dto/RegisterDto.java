@@ -10,7 +10,7 @@ public class RegisterDto {
     private Byte storeId;
     private String username;
     private String password;
-    private Double balance = 0.0;
+    private Double balance;
     
 	public RegisterDto() {}
 

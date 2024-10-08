@@ -20,16 +20,20 @@ public class Address {
     @Column(name = "phone")
     private String phone;
     
+    @Column(name = "postal_code")
+    private String postalCode;
+    
     @OneToOne
     @JoinColumn(name = "city_id", referencedColumnName = "city_id")
     private City city;
 
 	public Address() {}
 
-	public Address(String address, String district, String phone, City city) {
+	public Address(String address, String district, String phone, String postalCode, City city) {
 		this.address = address;
 		this.district = district;
 		this.phone = phone;
+		this.postalCode = postalCode;
 		this.city = city;
 	}
 
@@ -63,6 +67,14 @@ public class Address {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	public City getCity() {

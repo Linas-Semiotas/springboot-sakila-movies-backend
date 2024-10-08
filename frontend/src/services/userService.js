@@ -1,29 +1,8 @@
-import axios from 'axios';
-import { getToken } from './authService';
+import createAxiosInstance from './axiosInstance';
 
-// Default path
-const API_URL = 'http://localhost:8080/api/user';
+const axiosInstance = createAxiosInstance('/api/user');
 
-// Create an Axios instance with default settings
-const axiosInstance = axios.create({
-    baseURL: API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    }
-});
-
-// Add a request interceptor to include the token in every request
-axiosInstance.interceptors.request.use(
-    (config) => {
-        const token = getToken();
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
-
+// BALANCE
 // Fetch balance
 export const getBalance = async () => {
     try {
@@ -46,6 +25,7 @@ export const addBalance = async (amount) => {
     }
 };
 
+// PROFILE
 // Fetch personal information
 export const getPersonalInfo = async () => {
     try {
@@ -68,6 +48,29 @@ export const updatePersonalInfo = async (personalInfo) => {
     }
 };
 
+// Fetch address information
+export const getAddressInfo = async () => {
+    try {
+        const response = await axiosInstance.get('/profile/address-info');
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching address information:", error);
+        throw error;
+    }
+};
+
+// Update address information
+export const updateAddressInfo = async (addressInfo) => {
+    try {
+        const response = await axiosInstance.put('/profile/address-info', addressInfo);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating address information:", error);
+        throw error;
+    }
+};
+
+// SECURITY
 // Change password
 export const changePassword = async (currentPassword, newPassword) => {
     try {

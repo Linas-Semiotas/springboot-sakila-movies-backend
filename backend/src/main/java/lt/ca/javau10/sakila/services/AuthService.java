@@ -74,7 +74,7 @@ public class AuthService {
         User user = new User(registerDto.getUsername(), encryptedPassword, null, Set.of("USER"), 0.0);
         User savedUser = userRepository.save(user);
 
-        Customer customer = new Customer(registerDto.getFirstName(), registerDto.getLastName(), registerDto.getEmail(), registerDto.getStoreId(), savedAddress);
+        Customer customer = new Customer(registerDto.getFirstName(), registerDto.getLastName(), registerDto.getEmail(), registerDto.getStoreId(), savedAddress, (byte) 1);
         customer.setUser(savedUser);
         customerRepository.save(customer);
         

@@ -1,6 +1,5 @@
-import '../styles/User.css';
 import { useState, useEffect } from 'react';
-import { getBalance, addBalance } from '../services/userService.js';
+import { getBalance, addBalance } from '../../services/userService.js';
 
 const UserBalance = () => {
     const [balance, setBalance] = useState(0.0);

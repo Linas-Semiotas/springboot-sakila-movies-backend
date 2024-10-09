@@ -5,13 +5,19 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "language")
 public class Language {
+	
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "language_id")
     private Byte id;
 
     private String name;
     
     public Language() {}
+    
+    public Language(String name) {
+        this.name = name;
+    }
 
 	public Byte getId() {
 		return id;
@@ -28,6 +34,4 @@ public class Language {
 	public void setName(String name) {
 		this.name = name;
 	}
-    
-    
 }

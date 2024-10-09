@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import '../styles/User.css';
+import '../../styles/User.css';
 import Orders from './UserOrders';
 import Balance from './UserBalance';
 import Profile from './UserProfile';

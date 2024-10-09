@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import '../styles/User.css';
-import { changePassword } from '../services/userService';
+import { changePassword } from '../../services/userService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
@@ -43,6 +42,7 @@ const UserSecurity = () => {
 
     return (
         <div className="user-container">
+            <h2>Change Password</h2>
             <form className="security-form" onSubmit={handleSubmit}>
                 <div className="input-group">
                     <label>Current Password</label>

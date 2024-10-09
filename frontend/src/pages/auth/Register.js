@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Register.css';
-import storeService from '../services/storeService';
-import { register } from '../services/authService';
+import '../../styles/Register.css';
+import storeService from '../../services/storeService';
+import { register } from '../../services/authService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 

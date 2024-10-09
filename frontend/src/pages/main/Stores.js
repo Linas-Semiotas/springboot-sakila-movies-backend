@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Stores.css';
-import storeService from '../services/storeService';
+import '../../styles/Stores.css';
+import storeService from '../../services/storeService';
 
 const Stores = () => {
     const [stores, setStores] = useState([]);

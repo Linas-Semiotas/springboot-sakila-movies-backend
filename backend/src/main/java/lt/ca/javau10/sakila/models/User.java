@@ -84,7 +84,7 @@ public class User {
 		return roles;
 	}
 
-	public void setCustomer(Set<String> roles) {
+	public void setRoles(Set<String> roles) {
 		this.roles = roles;
 	}
 

@@ -78,7 +78,7 @@ public class AuthServiceTest {
         User newUser = new User("newUser", "encodedPassword", null, Set.of("USER"), 0.0);
         when(userRepository.save(any(User.class))).thenReturn(newUser);
 
-        Customer savedCustomer = new Customer("First", "Last", "email@example.com", (byte) 1, defaultAddress);
+        Customer savedCustomer = new Customer("First", "Last", "email@example.com", (byte) 1, defaultAddress, (byte) 1);
         when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
 
         // Act

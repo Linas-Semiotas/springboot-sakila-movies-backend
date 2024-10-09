@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Rental.css';
-import rentalService from '../services/rentalService';
+import '../../styles/Rental.css';
+import rentalService from '../../services/rentalService';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TablePagination, Paper, TableSortLabel

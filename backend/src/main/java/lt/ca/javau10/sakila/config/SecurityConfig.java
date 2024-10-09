@@ -27,16 +27,17 @@ public class SecurityConfig {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
+    //Security settings bean
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow your frontend origin
+                configuration.setAllowedOrigins(List.of("http://localhost:3000"));
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                configuration.setAllowCredentials(true); // Allow credentials like cookies
-                configuration.setAllowedHeaders(List.of("*")); // Allow all headers
+                configuration.setAllowCredentials(true);
+                configuration.setAllowedHeaders(List.of("*"));
                 return configuration;
             }))
             .authorizeHttpRequests(authorize -> authorize
@@ -57,7 +58,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     // AuthenticationManager bean
     @Bean

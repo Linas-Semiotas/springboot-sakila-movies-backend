@@ -23,15 +23,18 @@ public class Customer {
     private String lastName;
     private String email;
     private Byte storeId;
-
+    private Byte active;
+    
+    
     public Customer() {}
     
-    public Customer(String firstName, String lastName, String email, Byte storeId, Address address) {
+    public Customer(String firstName, String lastName, String email, Byte storeId, Address address, Byte active) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.storeId = storeId;
         this.address = address;
+        this.active = active;
     }
 
 	public Short getCustomerId() {
@@ -88,5 +91,13 @@ public class Customer {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public Byte getActive() {
+		return active;
+	}
+
+	public void setActive(Byte active) {
+		this.active = active;
 	}
 }

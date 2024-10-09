@@ -1,4 +1,3 @@
-import '../styles/User.css';
 
 const UserOrders = () => {
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import '../styles/Movie.css';
-import movieService from '../services/movieService';
+import '../../styles/Movie.css';
+import movieService from '../../services/movieService';
 
 const Movie = () => {
     const { id } = useParams();

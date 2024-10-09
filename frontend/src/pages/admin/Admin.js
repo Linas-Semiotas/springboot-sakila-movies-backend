@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import '../styles/User.css';
-import Orders from './UserOrders';
-import Balance from './UserBalance';
-import Profile from './UserProfile';
+import '../../styles/Admin.css';
+import Users from './AdminUsers';
+import Movies from './AdminMovies';
+import Stores from './AdminStores';
 
-const User = () => {
+const Admin = () => {
     const [value, setValue] = useState(0);
     const navigate = useNavigate();
     const location = useLocation();
@@ -39,9 +39,9 @@ const User = () => {
     return (
         <div>
             <div className='page-title'>{tabTitles[value]}</div>
-            <div className="user-main-container">
+            <div className="admin-main-container">
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="user tabs" 
+                    <Tabs value={value} onChange={handleChange} aria-label="admin tabs" 
                         sx={{
                             '& .MuiTabs-indicator': {
                                 height: '3px',
@@ -74,13 +74,13 @@ const User = () => {
                 </Box>
                 <Routes>
                     <Route path="/" element={<Navigate to="users" />} />
-                    <Route path="users" element={<Orders />} />
-                    <Route path="movies" element={<Balance />} />
-                    <Route path="stores" element={<Profile />} />
+                    <Route path="users" element={<Users />} />
+                    <Route path="movies" element={<Movies />} />
+                    <Route path="stores" element={<Stores />} />
                 </Routes>
             </div>
         </div>
     );
 };
 
-export default User;
+export default Admin;

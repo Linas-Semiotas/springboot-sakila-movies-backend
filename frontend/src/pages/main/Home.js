@@ -1,6 +1,6 @@
 import React from 'react';
-import '../styles/Home.css';
-import image from '../assets/images/homepage-image.png';
+import '../../styles/Home.css';
+import image from '../../assets/images/homepage-image.png';
 
 const Home = () => {
     return (

@@ -1,5 +1,8 @@
 package lt.ca.javau10.sakila.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,13 +14,16 @@ import lt.ca.javau10.sakila.models.Address;
 import lt.ca.javau10.sakila.models.City;
 import lt.ca.javau10.sakila.models.Country;
 import lt.ca.javau10.sakila.models.Customer;
+import lt.ca.javau10.sakila.models.Rental;
 import lt.ca.javau10.sakila.models.User;
 import lt.ca.javau10.sakila.models.dto.AddressInfoDto;
+import lt.ca.javau10.sakila.models.dto.OrdersDto;
 import lt.ca.javau10.sakila.models.dto.PersonalInfoDto;
 import lt.ca.javau10.sakila.repositories.AddressRepository;
 import lt.ca.javau10.sakila.repositories.CityRepository;
 import lt.ca.javau10.sakila.repositories.CountryRepository;
 import lt.ca.javau10.sakila.repositories.CustomerRepository;
+import lt.ca.javau10.sakila.repositories.RentalRepository;
 import lt.ca.javau10.sakila.repositories.UserRepository;
 
 @Service
@@ -28,6 +34,7 @@ public class UserService {
     private final AddressRepository  addressRepository;
     private final CityRepository cityRepository;
     private final CountryRepository countryRepository;
+    private final RentalRepository rentalRepository;
     private final PasswordEncoder passwordEncoder;
     
     public UserService(UserRepository userRepository,
@@ -35,15 +42,37 @@ public class UserService {
     		AddressRepository  addressRepository,
     		CityRepository cityRepository,
     		CountryRepository countryRepository,
+    		RentalRepository rentalRepository,
     		PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.customerRepository = customerRepository;
 		this.addressRepository = addressRepository;
 		this.cityRepository = cityRepository;
 		this.countryRepository = countryRepository;
+		this.rentalRepository = rentalRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
     
+    //ORDERS
+    
+    @Transactional
+    public List<OrdersDto> getOrdersForUser(Integer userId) {
+        List<Rental> rentals = rentalRepository.findAllByUserId(userId);
+        return rentals.stream()
+                .map(this::convertToOrdersDto)
+                .collect(Collectors.toList());
+    }
+
+    private OrdersDto convertToOrdersDto(Rental rental) {
+        return new OrdersDto(
+            rental.getId(),
+            rental.getRentalDate(),
+            rental.getReturnDate(),
+            rental.getInventory().getMovie().getTitle()
+        );
+    }
+    
+    //BALANCE
     
     public Double getUserBalance(String username) {
         User user = userRepository.findByUsername(username)
@@ -61,18 +90,7 @@ public class UserService {
         return newBalance;
     }
     
-  //Change password
-    public void changePassword(String username, String currentPassword, String newPassword) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        // Verify the current password
-        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new BadCredentialsException("Current password is incorrect");
-        }
-        // Update the user's password
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
+    //PROFILE
     
     public int getUserIdByUsername(String username) {
         User user = userRepository.findByUsername(username)
@@ -161,5 +179,19 @@ public class UserService {
             }
 
             addressRepository.save(address);
+    }
+    
+    //SECURITY
+    
+    public void changePassword(String username, String currentPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        // Verify the current password
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new BadCredentialsException("Current password is incorrect");
+        }
+        // Update the user's password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

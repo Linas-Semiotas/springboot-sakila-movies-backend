@@ -1,50 +1,88 @@
 package lt.ca.javau10.sakila.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="film")
+@Table(name = "rental")
 public class Rental {
 
-	@Id
-    @Column(name = "film_id")
-    private Short id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rental_id")
+    private Integer id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "rental_date")
+    private LocalDateTime rentalDate;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "return_date")
+    private LocalDateTime returnDate;
 
-    @Column(name = "release_year")
-    private Integer releaseYear;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "inventory_id")
+    private Inventory inventory;
 
-    public Rental() {}
-    
-	public Rental(Short id, String title, String description, Integer releaseYear) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+	public Rental() {}
+
+	public Rental(Integer id, LocalDateTime rentalDate, LocalDateTime returnDate, Inventory inventory, Customer customer) {
 		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.releaseYear = releaseYear;
+		this.rentalDate = rentalDate;
+		this.returnDate = returnDate;
+		this.inventory = inventory;
+		this.customer = customer;
 	}
 
-	public Short getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public String getTitle() {
-		return title;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getDescription() {
-		return description;
+	public LocalDateTime getRentalDate() {
+		return rentalDate;
 	}
 
-	public Integer getReleaseYear() {
-		return releaseYear;
+	public void setRentalDate(LocalDateTime rentalDate) {
+		this.rentalDate = rentalDate;
 	}
+
+	public LocalDateTime getReturnDate() {
+		return returnDate;
+	}
+
+	public void setReturnDate(LocalDateTime returnDate) {
+		this.returnDate = returnDate;
+	}
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	} 
 }
 

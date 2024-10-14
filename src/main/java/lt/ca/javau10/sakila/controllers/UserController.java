@@ -1,12 +1,14 @@
 package lt.ca.javau10.sakila.controllers;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lt.ca.javau10.sakila.models.User;
 import lt.ca.javau10.sakila.models.dto.AddressInfoDto;
 import lt.ca.javau10.sakila.models.dto.ChangePasswordDto;
+import lt.ca.javau10.sakila.models.dto.OrdersDto;
 import lt.ca.javau10.sakila.models.dto.PersonalInfoDto;
+import lt.ca.javau10.sakila.repositories.UserRepository;
 import lt.ca.javau10.sakila.security.responses.MessageResponse;
 import lt.ca.javau10.sakila.services.UserService;
 
@@ -26,19 +31,28 @@ public class UserController {
 
     @Autowired
     private UserService service;
+    
+    @Autowired
+    private UserRepository userRepository;
 
-    @PostMapping("/security/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto changePasswordDto, Principal principal) {
-        try {
-            String username = principal.getName();
-            service.changePassword(username, changePasswordDto.getCurrentPassword(), changePasswordDto.getNewPassword());
-            return ResponseEntity.ok(new MessageResponse("Password updated successfully"));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Current password is incorrect"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Error updating password"));
-        }
+    //ORDERS
+    
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrdersDto>> getOrdersForCurrentUser(Authentication authentication) {
+        // Get the username from the authenticated user
+        String username = authentication.getName();
+
+        // Find the custom User entity from your database by username
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Fetch orders for the current user using their ID
+        List<OrdersDto> orders = service.getOrdersForUser(user.getUserId());
+
+        return ResponseEntity.ok(orders);
     }
+    
+    //BALANCE
     
     @GetMapping("/balance")
     public ResponseEntity<Double> getBalance(Principal principal) {
@@ -52,6 +66,8 @@ public class UserController {
         Double newBalance = service.addBalance(principal.getName(), amount);
         return ResponseEntity.ok(newBalance);
     }
+    
+    //PROFILE
     
     @GetMapping("/profile/personal-info")
     public ResponseEntity<PersonalInfoDto> getPersonalInfo(Principal principal) {
@@ -83,5 +99,20 @@ public class UserController {
         int userId = service.getUserIdByUsername(username);
         service.updateAddressInfo(userId, addressInfoDto);
         return ResponseEntity.ok("Address information updated successfully");
+    }
+    
+    //SECURITY
+    
+    @PostMapping("/security/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto changePasswordDto, Principal principal) {
+        try {
+            String username = principal.getName();
+            service.changePassword(username, changePasswordDto.getCurrentPassword(), changePasswordDto.getNewPassword());
+            return ResponseEntity.ok(new MessageResponse("Password updated successfully"));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Current password is incorrect"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Error updating password"));
+        }
     }
 }

@@ -30,7 +30,6 @@ public class RentalService {
     			.orElse(null);
 	}
 
-    
     private RentalDto convertToDto(Movie movie) {
         return new RentalDto(
     		movie.getFilmId(),
@@ -40,5 +39,4 @@ public class RentalService {
             movie.getRentalDuration()
         );
     }
-
 }

@@ -20,6 +20,7 @@ import lt.ca.javau10.sakila.models.dto.AdminUserDto;
 import lt.ca.javau10.sakila.models.dto.CategoryDto;
 import lt.ca.javau10.sakila.models.dto.LanguageDto;
 import lt.ca.javau10.sakila.models.dto.MovieDto;
+import lt.ca.javau10.sakila.security.responses.MessageResponse;
 import lt.ca.javau10.sakila.services.AdminService;
 
 @RestController
@@ -54,10 +55,49 @@ public class AdminController {
 
     //MOVIES
     
-    @GetMapping("movies")
+    @GetMapping("/movies")
     public ResponseEntity<List<MovieDto>> getAllMovies() {
         List<MovieDto> movies = service.getAllMovies();
         return ResponseEntity.ok(movies);
+    }
+    
+    @PostMapping("/movies")
+    public ResponseEntity<String> addMovie(@RequestBody MovieDto movieDto) {
+        try {
+        	System.out.println("Received movie DTO: " + movieDto);
+            service.addMovie(movieDto);
+            return ResponseEntity.ok("Movie added successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the movie");
+        }
+    }
+    
+    @PutMapping("/movies/{id}")
+    public ResponseEntity<?> updateMovie(@PathVariable Short id, @RequestBody MovieDto movieDto) {
+        try {
+            service.updateMovie(id, movieDto);  // Calling service to update the movie
+            return ResponseEntity.ok(new MessageResponse("Movie updated successfully."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(new MessageResponse("An error occurred while updating the movie."));
+        }
+    }
+    
+    @DeleteMapping("/movies/{id}")
+    public ResponseEntity<?> deleteMovie(@PathVariable Short id) {
+        try {
+            service.deleteMovie(id);
+            return ResponseEntity.ok(new MessageResponse("Movie deleted successfully."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(new MessageResponse("Error deleting movie. It might be in use."));
+        }
     }
     
     //LANGUAGES

@@ -38,8 +38,8 @@ public class MoviesControllerTest {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(moviesController).build();
 
-        MovieDto movie1 = new MovieDto((short) 1, "Movie One", "Description of Movie One", 2020, (short) 120, Rating.PG, "English", "Action", "Trailers", Arrays.asList("Actor One", "Actor Two"));
-        MovieDto movie2 = new MovieDto((short) 2, "Movie Two", "Description of Movie Two", 2021, (short) 150, Rating.R, "English", "Drama", "Trailers", Arrays.asList("Actor Three", "Actor Four"));
+        MovieDto movie1 = new MovieDto((short) 1, "Movie One", "Description of Movie One", 2020, (short) 120, Rating.PG, "English", Arrays.asList("Action"), "Trailers", Arrays.asList("Actor One", "Actor Two"));
+        MovieDto movie2 = new MovieDto((short) 2, "Movie Two", "Description of Movie Two", 2021, (short) 150, Rating.R, "English", Arrays.asList("Drama"), "Trailers", Arrays.asList("Actor Three", "Actor Four"));
         List<MovieDto> movies = Arrays.asList(movie1, movie2);
 
         when(movieService.getAllMovies()).thenReturn(movies);

@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 public class Movie {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "film_id")
     private Short filmId;
 
@@ -46,13 +47,13 @@ public class Movie {
     @JoinColumn(name = "language_id")
     private Language language;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "film_category",
         joinColumns = @JoinColumn(name = "film_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Category category;
+	private List<Category> category;
     
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -63,12 +64,10 @@ public class Movie {
 	private List<Actor> actors;
 
 	public Movie() {}
-	
-	
 
 	public Movie(Short filmId, String title, String description, Integer releaseYear, Short filmLength, Rating rating,
 			BigDecimal rentalRate, BigDecimal replacementCost, Short rentalDuration, String specialFeatures,
-			Language language, Category category, List<Actor> actors) {
+			Language language, List<Category> category, List<Actor> actors) {
 		this.filmId = filmId;
 		this.title = title;
 		this.description = description;
@@ -84,8 +83,6 @@ public class Movie {
 		this.actors = actors;
 	}
 
-
-
 	public Short getFilmId() { return filmId; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
@@ -97,7 +94,7 @@ public class Movie {
     public Short getRentalDuration() { return rentalDuration; }
     public String getSpecialFeatures() { return specialFeatures; }
     public Language getLanguage() { return language; }
-    public Category getCategory() { return category; }
+    public List<Category> getCategory() { return category; }
     public List<Actor> getActor() { return actors; }
 
     public void setFilmId(Short filmId) { this.filmId = filmId; }
@@ -109,8 +106,8 @@ public class Movie {
     public void setRentalRate(BigDecimal rentalRate) { this.rentalRate = rentalRate; }
     public void setReplacementCost(BigDecimal replacementCost) { this.replacementCost = replacementCost; }
     public void setRentalDuration(Short rentalDuration) { this.rentalDuration = rentalDuration; }
-    public void setRentalDuration(String specialFeatures) { this.specialFeatures = specialFeatures; }
+    public void setSpecialFeatures(String specialFeatures) { this.specialFeatures = specialFeatures; }
     public void setLanguage(Language language) { this.language = language; }
-    public void setCategory(Category category) { this.category = category; }
+    public void setCategory(List<Category> category) { this.category = category != null ? category : new ArrayList<>(); }
     public void setActors(List<Actor> actors) { this.actors = actors != null ? actors : new ArrayList<>(); }
 }

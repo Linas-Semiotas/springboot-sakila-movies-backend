@@ -13,7 +13,7 @@ public class MovieDto {
     private Short filmLength;
     private Rating rating;
     private String language;
-    private String category;
+    private List<String> category;
     private String specialFeatures;
     private BigDecimal rentalRate;
     private BigDecimal replacementCost;
@@ -23,7 +23,7 @@ public class MovieDto {
 	public MovieDto() {}
 	
 	public MovieDto(Short id, String title, String description, Integer releaseYear, Short filmLength, Rating rating,
-			String language, String category, String specialFeatures, List<String> actors) {
+			String language, List<String> category, String specialFeatures, List<String> actors) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -37,7 +37,8 @@ public class MovieDto {
 	}
 	
 	public MovieDto(Short id, String title, String description, Integer releaseYear, Short filmLength, Rating rating,
-			String language, String category, String specialFeatures, BigDecimal rentalRate, BigDecimal replacementCost, Short rentalDuration, List<String> actors) {
+			String language, List<String> category, String specialFeatures, BigDecimal rentalRate, BigDecimal replacementCost,
+			Short rentalDuration, List<String> actors) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -109,11 +110,11 @@ public class MovieDto {
 		this.language = language;
 	}
 
-	public String getCategory() {
+	public List<String> getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(List<String> category) {
 		this.category = category;
 	}
 
@@ -155,5 +156,24 @@ public class MovieDto {
 
 	public void setActors(List<String> actors) {
 		this.actors = actors;
+	}
+	
+	@Override
+	public String toString() {
+	    return "MovieDto{" +
+	            "id=" + id +
+	            ", title='" + title + '\'' +
+	            ", description='" + description + '\'' +
+	            ", releaseYear=" + releaseYear +
+	            ", filmLength=" + filmLength +
+	            ", rating=" + rating +
+	            ", language='" + language + '\'' +
+	            ", category=" + category +  // No single quotes around category, it will now print as a list
+	            ", specialFeatures='" + specialFeatures + '\'' +
+	            ", rentalRate=" + rentalRate +
+	            ", replacementCost=" + replacementCost +
+	            ", rentalDuration=" + rentalDuration +
+	            ", actors=" + actors +  // Same for actors
+	            '}';
 	}
 }

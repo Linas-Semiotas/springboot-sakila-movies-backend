@@ -8,11 +8,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lt.ca.javau10.sakila.exceptions.ResourceNotFoundException;
 import lt.ca.javau10.sakila.models.Actor;
 import lt.ca.javau10.sakila.models.Category;
 import lt.ca.javau10.sakila.models.Customer;
 import lt.ca.javau10.sakila.models.Language;
+import lt.ca.javau10.sakila.models.Movie;
 import lt.ca.javau10.sakila.models.User;
 import lt.ca.javau10.sakila.models.dto.ActorDto;
 import lt.ca.javau10.sakila.models.dto.AdminUserDto;
@@ -106,7 +108,9 @@ public class AdminService {
                     movie.getFilmLength(), 
                     movie.getRating(), 
                     movie.getLanguage().getName(),
-                    movie.getCategory().getName(),
+                    movie.getCategory().stream()
+                    	.map(categ -> categ.getName())
+                    	.collect(Collectors.toList()),
                     movie.getSpecialFeatures(),
                     movie.getRentalRate(),
                     movie.getReplacementCost(),
@@ -116,6 +120,101 @@ public class AdminService {
                          .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
+    }
+    
+    @Transactional
+    public Movie addMovie(MovieDto movieDto) {
+        // Fetch or create language
+        Language language = languageRepository.findByName(movieDto.getLanguage())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid language " + movieDto.getLanguage()));
+  
+        // Create and save the new movie
+        Movie movie = new Movie();
+        movie.setTitle(movieDto.getTitle());
+        movie.setDescription(movieDto.getDescription());
+        movie.setReleaseYear(movieDto.getReleaseYear());
+        movie.setFilmLength(movieDto.getFilmLength());
+        movie.setRating(movieDto.getRating());
+        movie.setLanguage(language);
+        movie.setSpecialFeatures(movieDto.getSpecialFeatures());
+        movie.setRentalRate(movieDto.getRentalRate());
+        movie.setReplacementCost(movieDto.getReplacementCost());
+        movie.setRentalDuration(movieDto.getRentalDuration());
+        
+        List<Category> categories = movieDto.getCategory().stream()
+            .map(categoryName -> categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category: " + categoryName)))
+            .collect(Collectors.toList());
+        movie.setCategory(categories);  // Set the categories
+       
+        List<Actor> actors = movieDto.getActors().stream()
+                .map(actorName -> {
+                    String[] nameParts = actorName.split(" ");
+                    if (nameParts.length != 2) {
+                        throw new IllegalArgumentException("Invalid actor name format: " + actorName);
+                    }
+                    return actorRepository.findByFirstNameAndLastName(nameParts[0], nameParts[1])
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid actor: " + actorName));
+                })
+                .collect(Collectors.toList());
+
+            movie.setActors(actors);
+        
+        return movieRepository.save(movie);
+    }
+    
+    @Transactional
+    public void updateMovie(Short movieId, MovieDto movieDto) {
+        // Fetch the existing movie
+        Movie existingMovie = movieRepository.findById(movieId)
+            .orElseThrow(() -> new IllegalArgumentException("Movie with id " + movieId + " not found"));
+
+        // Update the movie fields with values from the DTO
+        existingMovie.setTitle(movieDto.getTitle());
+        existingMovie.setDescription(movieDto.getDescription());
+        existingMovie.setReleaseYear(movieDto.getReleaseYear());
+        existingMovie.setFilmLength(movieDto.getFilmLength());
+        existingMovie.setRating(movieDto.getRating());
+        existingMovie.setSpecialFeatures(movieDto.getSpecialFeatures());
+        existingMovie.setRentalRate(movieDto.getRentalRate());
+        existingMovie.setReplacementCost(movieDto.getReplacementCost());
+        existingMovie.setRentalDuration(movieDto.getRentalDuration());
+
+        // Update language
+        Language language = languageRepository.findByName(movieDto.getLanguage())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid language: " + movieDto.getLanguage()));
+        existingMovie.setLanguage(language);
+
+        // Update categories
+        List<Category> categories = movieDto.getCategory().stream()
+            .map(categoryName -> categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category: " + categoryName)))
+            .collect(Collectors.toList());
+        existingMovie.setCategory(categories);
+
+        // Update actors
+        List<Actor> actors = movieDto.getActors().stream()
+            .map(actorName -> {
+                String[] nameParts = actorName.split(" ");
+                if (nameParts.length != 2) {
+                    throw new IllegalArgumentException("Invalid actor name format: " + actorName);
+                }
+                return actorRepository.findByFirstNameAndLastName(nameParts[0], nameParts[1])
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid actor: " + actorName));
+            })
+            .collect(Collectors.toList());
+        existingMovie.setActors(actors);
+
+        // Save the updated movie
+        movieRepository.save(existingMovie);
+    }
+    
+    @Transactional
+    public void deleteMovie(Short movieId) {
+        Movie movie = movieRepository.findById(movieId)
+            .orElseThrow(() -> new IllegalArgumentException("Movie with id " + movieId + " not found"));
+
+        movieRepository.delete(movie);
     }
     
     //LANGUAGES

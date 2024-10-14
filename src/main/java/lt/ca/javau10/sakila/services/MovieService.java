@@ -32,6 +32,13 @@ public class MovieService {
 	}
     
     private MovieDto convertToDto(Movie movie) {
+    	List<String> category = movie.getCategory() != null
+    		    ? movie.getCategory().stream()
+    		        .map(categ -> Utils.capitalize(categ.getName()))
+    		        .collect(Collectors.toList())
+    		    : Collections.emptyList();
+
+    	
     	List<String> actors = movie.getActor() != null 
 	        ? movie.getActor().stream()
 	            .map(actor -> Utils.capitalize(actor.getFirstName()) + " " + Utils.capitalize(actor.getLastName()))
@@ -46,7 +53,7 @@ public class MovieService {
 	        movie.getFilmLength(),
 	        movie.getRating(),            
 	        movie.getLanguage() != null ? movie.getLanguage().getName() : null,
-	        movie.getCategory() != null ? movie.getCategory().getName() : null,
+			category,
 	        movie.getSpecialFeatures(),
 	        actors
 	    );

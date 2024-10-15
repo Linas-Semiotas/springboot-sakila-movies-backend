@@ -22,6 +22,10 @@ public class MovieDto {
     
 	public MovieDto() {}
 	
+	public MovieDto(Short id) {
+		this.id = id;
+	}
+	
 	public MovieDto(Short id, String title, String description, Integer releaseYear, Short filmLength, Rating rating,
 			String language, List<String> category, String specialFeatures, List<String> actors) {
 		this.id = id;

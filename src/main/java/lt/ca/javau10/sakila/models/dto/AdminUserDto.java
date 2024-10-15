@@ -18,7 +18,6 @@ public class AdminUserDto {
 	}
 	
 	public AdminUserDto(boolean userRole, boolean adminRole, boolean enabled) {
-		super();
 		this.userRole = userRole;
 		this.adminRole = adminRole;
 		this.enabled = enabled;

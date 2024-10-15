@@ -91,7 +91,7 @@ public class RentalServiceTest {
         when(movieRepository.findById((short) 1)).thenReturn(Optional.of(movie1));
 
         // Act: Call the service method
-        RentalDto rentalDto = rentalService.getRentalById((short) 1);
+        RentalDto rentalDto = rentalService.getRentalById((short) 1, null);
 
         // Assert: Verify the result
         assertNotNull(rentalDto);
@@ -111,7 +111,7 @@ public class RentalServiceTest {
         when(movieRepository.findById((short) 1)).thenReturn(Optional.empty());
 
         // Act: Call the service method
-        RentalDto rentalDto = rentalService.getRentalById((short) 1);
+        RentalDto rentalDto = rentalService.getRentalById((short) 1, null);
 
         // Assert: Verify the result
         assertNull(rentalDto);

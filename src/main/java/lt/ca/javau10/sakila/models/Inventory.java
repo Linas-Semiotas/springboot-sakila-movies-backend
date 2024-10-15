@@ -22,13 +22,18 @@ public class Inventory {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "film_id")
     private Movie movie;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 
 	public Inventory() {}
 
-	public Inventory(Integer id, Movie movie) {
-		this.id = id;
-		this.movie = movie;
-	}
+	public Inventory(Integer id, Movie movie, Store store) {
+        this.id = id;
+        this.movie = movie;
+        this.store = store;
+    }
 
 	public Integer getId() {
 		return id;
@@ -44,6 +49,14 @@ public class Inventory {
 
 	public void setMovie(Movie movie) {
 		this.movie = movie;
+	}
+
+	public Store getStore() {
+		return store;
+	}
+
+	public void setStore(Store store) {
+		this.store = store;
 	}
 
     

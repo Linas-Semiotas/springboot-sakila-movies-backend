@@ -34,17 +34,21 @@ public class Rental {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+    
+    @Column(name = "staff_id")
+    private Byte staffId;
 
 	public Rental() {}
 
-	public Rental(Integer id, LocalDateTime rentalDate, LocalDateTime returnDate, Inventory inventory, Customer customer) {
-		this.id = id;
-		this.rentalDate = rentalDate;
-		this.returnDate = returnDate;
-		this.inventory = inventory;
-		this.customer = customer;
-	}
-
+	public Rental(Integer id, LocalDateTime rentalDate, LocalDateTime returnDate, Inventory inventory, Customer customer, Byte staffId) {
+        this.id = id;
+        this.rentalDate = rentalDate;
+        this.returnDate = returnDate;
+        this.inventory = inventory;
+        this.customer = customer;
+        this.staffId = staffId;
+    }
+	
 	public Integer getId() {
 		return id;
 	}
@@ -83,6 +87,14 @@ public class Rental {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public Byte getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(Byte staffId) {
+		this.staffId = staffId;
 	} 
 }
 

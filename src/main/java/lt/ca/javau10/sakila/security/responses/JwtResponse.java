@@ -9,7 +9,7 @@ public class JwtResponse {
     private List<String> roles;
 
     // Constructor with fields
-    public JwtResponse(String token, String username, String email, List<String> roles) {
+    public JwtResponse(String token, String username, List<String> roles) {
         this.token = token;
         this.username = username;
         this.roles = roles;

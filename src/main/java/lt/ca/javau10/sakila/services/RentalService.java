@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lt.ca.javau10.sakila.exceptions.MovieNotFoundException;
+import lt.ca.javau10.sakila.exceptions.RentalNotFoundException;
+import lt.ca.javau10.sakila.exceptions.UserNotFoundException;
 import lt.ca.javau10.sakila.models.Inventory;
 import lt.ca.javau10.sakila.models.Movie;
 import lt.ca.javau10.sakila.models.Rental;
@@ -22,24 +24,28 @@ import lt.ca.javau10.sakila.utils.Utils;
 
 @Service
 public class RentalService {
-
-	@Autowired
-    private RentalRepository rentalRepository;
-
-    @Autowired
-    private InventoryRepository inventoryRepository;
-
-    @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 	
-	@Autowired
-    private UserService userService;
+	private final RentalRepository rentalRepository;
+	private final InventoryRepository inventoryRepository;
+	private final MovieRepository movieRepository;
+	private final UserRepository userRepository;
+	private final UserService userService;
+
+    public RentalService(RentalRepository rentalRepository,
+    		InventoryRepository inventoryRepository,
+    		MovieRepository movieRepository,
+    		UserRepository userRepository,
+    		UserService userService) {
+        this.rentalRepository = rentalRepository;
+        this.inventoryRepository = inventoryRepository;
+        this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 	
 	public List<RentalDto> getAllRentals() {
         List<Movie> movies = movieRepository.findAll();
+        
         return movies.stream()
                 .map(movie -> new RentalDto(
                         movie.getFilmId(),
@@ -53,8 +59,10 @@ public class RentalService {
     
     public RentalDto getRentalById(Short id, String username) {
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rental not found"));
+                .orElseThrow(() -> new RentalNotFoundException("Rental with ID " + id + " not found"));
+        
         Double balance = userService.getUserBalance(username);
+        
         return new RentalDto(
                 movie.getFilmId(),
                 Utils.capitalize(movie.getTitle()),
@@ -65,25 +73,29 @@ public class RentalService {
         );
     }
     
-    public String rentMovie(Short movieId, String username) {
+    public void rentMovie(Short movieId, String username) {
     	if (movieId == null) {
             throw new IllegalArgumentException("Movie ID must not be null");
         }
+    	
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new MovieNotFoundException("Movie not found"));
+        
         BigDecimal rentalRate = movie.getRentalRate();
         double balance = user.getBalance();
+        
         if (BigDecimal.valueOf(balance).compareTo(rentalRate) < 0) {
-            return "Insufficient balance.";
+        	throw new IllegalArgumentException("Insufficient balance.");
         }
 
         Optional<Inventory> inventoryOpt = inventoryRepository.findFirstByMovieFilmIdAndStoreStoreId(
                 movie.getFilmId(), user.getCustomer().getStoreId());
 
         if (inventoryOpt.isEmpty()) {
-            return "No available inventory for this movie.";
+        	throw new RuntimeException("No available inventory for this movie.");
         }
 
         Inventory inventory = inventoryOpt.get();
@@ -99,7 +111,5 @@ public class RentalService {
 
         user.setBalance(user.getBalance() - rentalRate.doubleValue());
         userRepository.save(user);
-        
-        return "Rental successful!";
     }
 }

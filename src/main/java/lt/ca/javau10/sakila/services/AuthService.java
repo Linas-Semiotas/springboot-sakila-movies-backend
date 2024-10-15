@@ -1,27 +1,33 @@
 package lt.ca.javau10.sakila.services;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lt.ca.javau10.sakila.models.User;
+import lt.ca.javau10.sakila.exceptions.UsernameAlreadyExistsException;
 import lt.ca.javau10.sakila.models.Address;
 import lt.ca.javau10.sakila.models.City;
 import lt.ca.javau10.sakila.models.Country;
 import lt.ca.javau10.sakila.models.Customer;
+import lt.ca.javau10.sakila.models.dto.LoginDto;
 import lt.ca.javau10.sakila.models.dto.RegisterDto;
 import lt.ca.javau10.sakila.repositories.AddressRepository;
 import lt.ca.javau10.sakila.repositories.CityRepository;
 import lt.ca.javau10.sakila.repositories.CountryRepository;
 import lt.ca.javau10.sakila.repositories.CustomerRepository;
 import lt.ca.javau10.sakila.repositories.UserRepository;
+import lt.ca.javau10.sakila.security.responses.JwtResponse;
 import lt.ca.javau10.sakila.security.utils.JwtUtil;
 
 @Service
@@ -55,10 +61,10 @@ public class AuthService {
     }
     
     //Registration functionality
-	public String register(RegisterDto registerDto) {
+	public void register(RegisterDto registerDto) {
 		Optional<User> existingUser = userRepository.findByUsername(registerDto.getUsername());
 		if (existingUser.isPresent()) {
-	        return "Username already exists";
+			throw new UsernameAlreadyExistsException("Username is already taken");
 	    }
 		
 		Country country = countryRepository.findByCountry("")
@@ -77,8 +83,6 @@ public class AuthService {
         Customer customer = new Customer(registerDto.getFirstName(), registerDto.getLastName(), registerDto.getEmail(), registerDto.getStoreId(), savedAddress, (byte) 1);
         customer.setUser(savedUser);
         customerRepository.save(customer);
-        
-        return "Registration successful";
     }
 
 	//Finding user in repository
@@ -87,15 +91,20 @@ public class AuthService {
 	}
 	
     //Login functionality
-    public String login(String username, String password) {
-        try {
-        	Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-            );
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return jwtUtil.generateToken(userDetails);
-        } catch (BadCredentialsException e) {
-            return "Invalid username or password";
-        }
+    public JwtResponse login(LoginDto loginDto) {
+    	Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        
+        String jwt = jwtUtil.generateToken(userDetails);
+
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return new JwtResponse(jwt, userDetails.getUsername(), roles);
     }    
 }

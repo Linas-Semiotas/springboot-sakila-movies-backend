@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,12 +27,14 @@ import lt.ca.javau10.sakila.services.UserService;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
-    @Autowired
-    private UserService service;
     
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService service;
+    private final UserRepository userRepository;
+
+    public UserController(UserService service, UserRepository userRepository) {
+        this.service = service;
+        this.userRepository = userRepository;
+    }
 
     //ORDERS
     

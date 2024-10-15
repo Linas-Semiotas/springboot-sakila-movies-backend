@@ -2,7 +2,7 @@ package lt.ca.javau10.sakila.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lt.ca.javau10.sakila.models.dto.StoreDto;
@@ -11,11 +11,16 @@ import lt.ca.javau10.sakila.services.StoreService;
 @RestController
 @RequestMapping("/api/stores")
 public class StoresController {
-	@Autowired
-    private StoreService service;
+	
+	private final StoreService service;
 
-    @GetMapping
-    public List<StoreDto> getAllStores() {
-        return service.getAllStores();
+    public StoresController(StoreService service) {
+        this.service = service;
+    }
+
+	@GetMapping
+    public ResponseEntity<?> getAllStores() {
+        List<StoreDto> stores = service.getAllStores();
+        return ResponseEntity.ok(stores);
     }
 }

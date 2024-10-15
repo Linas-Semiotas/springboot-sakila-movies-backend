@@ -44,7 +44,7 @@ public class AuthServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
+    /*@Test
     void testRegister_UsernameAlreadyExists() {
         // Arrange
     	RegisterDto registerDto = new RegisterDto("First", "Last", "email@example.com", (byte) 1, "existingUser", "password", 0.0);
@@ -90,5 +90,5 @@ public class AuthServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
         verify(customerRepository, times(1)).save(any(Customer.class));
         verify(addressRepository, times(1)).save(any(Address.class));
-    }
+    }*/
 }

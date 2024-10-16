@@ -21,16 +21,15 @@ public class MoviesController {
         this.service = service;
     }
 
-	@GetMapping
-	public ResponseEntity<List<MovieDto>> getAllMovies() {
-	    List<MovieDto> movies = service.getAllMovies();
-	    return ResponseEntity.ok(movies);
-	}
+    @GetMapping
+    public ResponseEntity<List<MovieDto>> getAllMovies() {
+        List<MovieDto> movies = service.findAllMovies();
+        return ResponseEntity.ok(movies);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<MovieDto> getMovieById(@PathVariable Short id) {
-	    MovieDto movie = service.getMovieById(id);
-	    return ResponseEntity.ok(movie);
-	}
-
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieDto> getMovieById(@PathVariable Short id) {
+        MovieDto movie = service.findMovieById(id);
+        return ResponseEntity.ok(movie);
+    }
 }

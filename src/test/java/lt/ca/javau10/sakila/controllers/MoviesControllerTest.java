@@ -42,8 +42,8 @@ public class MoviesControllerTest {
         MovieDto movie2 = new MovieDto((short) 2, "Movie Two", "Description of Movie Two", 2021, (short) 150, Rating.R, "English", Arrays.asList("Drama"), "Trailers", Arrays.asList("Actor Three", "Actor Four"));
         List<MovieDto> movies = Arrays.asList(movie1, movie2);
 
-        when(movieService.getAllMovies()).thenReturn(movies);
-        when(movieService.getMovieById((short) 1)).thenReturn(movies.get(0));
+        when(movieService.findAllMovies()).thenReturn(movies);
+        when(movieService.findMovieById((short) 1)).thenReturn(movies.get(0));
     }
     
     @Test
@@ -53,7 +53,7 @@ public class MoviesControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        verify(movieService, times(1)).getAllMovies();
+        verify(movieService, times(1)).findAllMovies();
     }
     
     @Test
@@ -65,6 +65,6 @@ public class MoviesControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        verify(movieService, times(1)).getMovieById(movieId);
+        verify(movieService, times(1)).findMovieById(movieId);
     }
 }

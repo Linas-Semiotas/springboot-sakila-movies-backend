@@ -57,7 +57,7 @@ public class MovieServiceTest {
         when(movieRepository.findAll()).thenReturn(Arrays.asList(movie1, movie2));
 
         // Act
-        List<MovieDto> result = movieService.getAllMovies();
+        List<MovieDto> result = movieService.findAllMovies();
 
         // Assert
         assertEquals(2, result.size());
@@ -81,7 +81,7 @@ public class MovieServiceTest {
         when(movieRepository.findById((short) 1)).thenReturn(Optional.of(movie));
 
         // Act
-        MovieDto result = movieService.getMovieById((short) 1);
+        MovieDto result = movieService.findMovieById((short) 1);
 
         // Assert
         assertNotNull(result);
@@ -94,7 +94,7 @@ public class MovieServiceTest {
         when(movieRepository.findById((short) 999)).thenReturn(Optional.empty());
 
         // Act
-        MovieDto result = movieService.getMovieById((short) 999);
+        MovieDto result = movieService.findMovieById((short) 999);
 
         // Assert
         assertNull(result);

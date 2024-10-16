@@ -44,7 +44,7 @@ public class SecurityConfig {
                 return configuration;
             }))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/*").permitAll()
+                .requestMatchers("/api/auth/*").anonymous()
                 .requestMatchers("/api/user/**").hasRole("USER")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/rental/**").authenticated()
@@ -56,7 +56,7 @@ public class SecurityConfig {
                     response.getWriter().write("Unauthorized access");
                 })
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Stateless session
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

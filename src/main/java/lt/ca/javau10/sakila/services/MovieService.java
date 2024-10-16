@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lt.ca.javau10.sakila.exceptions.MovieNotFoundException;
 import lt.ca.javau10.sakila.models.Movie;
@@ -22,17 +23,20 @@ public class MovieService {
         this.repository = repository;
     }
     
-    public List<MovieDto> getAllMovies() {
+    @Transactional(readOnly = true)
+    public List<MovieDto> findAllMovies() {
         return repository.findAll().stream()
-        		.map(this::convertToDto)
-            	.collect(Collectors.toList());
+            .map(this::convertToDto)
+            .collect(Collectors.toList());
     }
 
-	public MovieDto getMovieById(Short id) {
+    // Fetch a single movie by ID
+    @Transactional(readOnly = true)
+    public MovieDto findMovieById(Short id) {
         return repository.findById(id)
-				.map(this::convertToDto)
-				.orElseThrow(() -> new MovieNotFoundException("Movie with ID " + id + " not found"));
-	}
+            .map(this::convertToDto)
+            .orElseThrow(() -> new MovieNotFoundException("Movie with ID " + id + " not found"));
+    }
     
     private MovieDto convertToDto(Movie movie) {
     	List<String> category = Optional.ofNullable(movie.getCategory())

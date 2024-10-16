@@ -3,7 +3,6 @@ package lt.ca.javau10.sakila.controllers;
 import java.security.Principal;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,13 +35,8 @@ public class RentalController {
     @PostMapping("/rent")
     public ResponseEntity<MessageResponse> rentMovie(@RequestBody MovieDto movieDto, Principal principal) {
         String username = principal.getName();
-        try {
-            service.rentMovie(movieDto.getId(), username);
-            return ResponseEntity.ok(new MessageResponse("Movie rented successfully"));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                 .body(new MessageResponse(e.getMessage()));
-        }
+        service.rentMovie(movieDto.getId(), username);
+        return ResponseEntity.ok(new MessageResponse("Movie rented successfully"));
     }
 
     @GetMapping("/{id}")

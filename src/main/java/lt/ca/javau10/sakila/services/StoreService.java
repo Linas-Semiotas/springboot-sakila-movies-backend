@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lt.ca.javau10.sakila.models.Store;
 import lt.ca.javau10.sakila.models.dto.StoreDto;
@@ -17,7 +18,8 @@ public class StoreService {
     public StoreService(StoreRepository repository) {
         this.repository = repository;
     }
-
+    
+    @Transactional(readOnly = true)
     public List<StoreDto> getAllStores() {
         List<Store> stores = repository.findAll();
         

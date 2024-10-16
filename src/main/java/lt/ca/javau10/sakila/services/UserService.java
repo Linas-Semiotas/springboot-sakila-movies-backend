@@ -3,12 +3,13 @@ package lt.ca.javau10.sakila.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
+import lt.ca.javau10.sakila.exceptions.InsufficientBalanceException;
+import lt.ca.javau10.sakila.exceptions.InvalidCurrentPasswordException;
 import lt.ca.javau10.sakila.exceptions.ResourceNotFoundException;
 import lt.ca.javau10.sakila.models.Address;
 import lt.ca.javau10.sakila.models.City;
@@ -53,37 +54,43 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
     
+    //HELPER
+    
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+    
     //ORDERS
     
-    @Transactional
-    public List<OrdersDto> getOrdersForUser(Integer userId) {
-        List<Rental> rentals = rentalRepository.findAllByUserId(userId);
+    @Transactional(readOnly = true)
+    public List<OrdersDto> getOrdersForUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        List<Rental> rentals = rentalRepository.findAllByUserId(user.getUserId());
         return rentals.stream()
-                .map(this::convertToOrdersDto)
+                .map(rental -> new OrdersDto(
+                    rental.getId(),
+                    rental.getRentalDate(),
+                    rental.getReturnDate(),
+                    rental.getInventory().getMovie().getTitle()))
                 .collect(Collectors.toList());
-    }
-
-    private OrdersDto convertToOrdersDto(Rental rental) {
-        return new OrdersDto(
-            rental.getId(),
-            rental.getRentalDate(),
-            rental.getReturnDate(),
-            rental.getInventory().getMovie().getTitle()
-        );
     }
     
     //BALANCE
     
     public Double getUserBalance(String username) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = getUserByUsername(username);
         return user.getBalance();
     }
 
     @Transactional
     public Double addBalance(String username, Double amount) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    	if (amount == null || amount <= 0) { // Validation happens here
+            throw new InsufficientBalanceException("Amount must be greater than 0");
+        }
+    	
+        User user = getUserByUsername(username);
         Double newBalance = user.getBalance() + amount;
         user.setBalance(newBalance);
         userRepository.save(user);
@@ -92,13 +99,7 @@ public class UserService {
     
     //PROFILE
     
-    public int getUserIdByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return user.getUserId();
-    }
-    
-    //Get personal information based on user ID
+    @Transactional(readOnly = true)
     public PersonalInfoDto getPersonalInfo(int userId) {
         Customer customer = customerRepository.findByUser_UserId(userId)
             .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -115,6 +116,7 @@ public class UserService {
     }
 
     //Update personal information
+    @Transactional
     public void updatePersonalInfo(int userId, PersonalInfoDto personalInfoDto) {
         Customer customer = customerRepository.findByUser_UserId(userId)
             .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -131,10 +133,10 @@ public class UserService {
     }
     
     //Get address information based on user ID
+    @Transactional(readOnly = true)
     public AddressInfoDto getAddressInfo(int userId) {
         Customer customer = customerRepository.findByUser_UserId(userId)
             .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-
         Address address = addressRepository.findById(customer.getAddress().getAddressId())
             .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
 
@@ -148,6 +150,7 @@ public class UserService {
     }
 
     //Update address information
+    @Transactional
     public void updateAddressInfo(int userId, AddressInfoDto addressInfoDto) {
         Customer customer = customerRepository.findByUser_UserId(userId)
             .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -158,39 +161,33 @@ public class UserService {
         address.setAddress(addressInfoDto.getAddress());
         address.setDistrict(addressInfoDto.getDistrict());
         address.setPostalCode(addressInfoDto.getPostalCode());
-        
+
         City city = address.getCity();
-        
         city.setCity(addressInfoDto.getCity());
-        
+
         Country newCountry = countryRepository.findByCountry(addressInfoDto.getCountry())
-                .orElseGet(() -> countryRepository.save(new Country(addressInfoDto.getCountry())));
+            .orElseGet(() -> countryRepository.save(new Country(addressInfoDto.getCountry())));
 
-            // Get the old country before updating the city
-            Country oldCountry = city.getCountry();
+        Country oldCountry = city.getCountry();
+        city.setCountry(newCountry);
+        cityRepository.save(city);
 
-            // Update the city to associate it with the new country
-            city.setCountry(newCountry);
-            cityRepository.save(city);
+        if (!cityRepository.existsByCountry(oldCountry)) {
+            countryRepository.delete(oldCountry);
+        }
 
-            // Check if the old country is no longer used by any city
-            if (!cityRepository.existsByCountry(oldCountry)) {
-                countryRepository.delete(oldCountry);
-            }
-
-            addressRepository.save(address);
+        addressRepository.save(address);
     }
     
     //SECURITY
     
     public void changePassword(String username, String currentPassword, String newPassword) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        // Verify the current password
+        User user = getUserByUsername(username);
+
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new BadCredentialsException("Current password is incorrect");
+            throw new InvalidCurrentPasswordException("Current password is incorrect");
         }
-        // Update the user's password
+
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }

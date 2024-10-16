@@ -2,7 +2,6 @@ package lt.ca.javau10.sakila.controllers;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.persistence.EntityNotFoundException;
-import lt.ca.javau10.sakila.exceptions.ResourceNotFoundException;
 import lt.ca.javau10.sakila.models.dto.ActorDto;
 import lt.ca.javau10.sakila.models.dto.AdminUserDto;
 import lt.ca.javau10.sakila.models.dto.CategoryDto;
@@ -42,15 +39,9 @@ public class AdminController {
     }
 
     @PutMapping("/users/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable int userId, @RequestBody AdminUserDto updateDto) {
-        try {
-        	service.updateUser(userId, updateDto);
-            return ResponseEntity.ok("User updated successfully");
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user");
-        }
+    public ResponseEntity<MessageResponse> updateUser(@PathVariable int userId, @RequestBody AdminUserDto updateDto) {
+        service.updateUser(userId, updateDto);
+        return ResponseEntity.ok(new MessageResponse("User updated successfully"));
     }
 
     //MOVIES
@@ -60,44 +51,23 @@ public class AdminController {
         List<MovieDto> movies = service.getAllMovies();
         return ResponseEntity.ok(movies);
     }
-    
+
     @PostMapping("/movies")
-    public ResponseEntity<String> addMovie(@RequestBody MovieDto movieDto) {
-        try {
-        	System.out.println("Received movie DTO: " + movieDto);
-            service.addMovie(movieDto);
-            return ResponseEntity.ok("Movie added successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the movie");
-        }
+    public ResponseEntity<MessageResponse> addMovie(@RequestBody MovieDto movieDto) {
+        service.addMovie(movieDto);
+        return ResponseEntity.ok(new MessageResponse("Movie added successfully"));
     }
-    
+
     @PutMapping("/movies/{id}")
-    public ResponseEntity<?> updateMovie(@PathVariable Short id, @RequestBody MovieDto movieDto) {
-        try {
-            service.updateMovie(id, movieDto);  // Calling service to update the movie
-            return ResponseEntity.ok(new MessageResponse("Movie updated successfully."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(new MessageResponse("An error occurred while updating the movie."));
-        }
+    public ResponseEntity<MessageResponse> updateMovie(@PathVariable Short id, @RequestBody MovieDto movieDto) {
+        service.updateMovie(id, movieDto);
+        return ResponseEntity.ok(new MessageResponse("Movie updated successfully"));
     }
-    
+
     @DeleteMapping("/movies/{id}")
-    public ResponseEntity<?> deleteMovie(@PathVariable Short id) {
-        try {
-            service.deleteMovie(id);
-            return ResponseEntity.ok(new MessageResponse("Movie deleted successfully."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(new MessageResponse("Error deleting movie. It might be in use."));
-        }
+    public ResponseEntity<MessageResponse> deleteMovie(@PathVariable Short id) {
+        service.deleteMovie(id);
+        return ResponseEntity.ok(new MessageResponse("Movie deleted successfully"));
     }
     
     //LANGUAGES
@@ -109,23 +79,15 @@ public class AdminController {
     }
 
     @PostMapping("/languages")
-    public ResponseEntity<String> addLanguage(@RequestBody LanguageDto languageDto) {
-        try {
-            service.addLanguage(languageDto);
-            return ResponseEntity.ok("Language added successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<MessageResponse> addLanguage(@RequestBody LanguageDto languageDto) {
+        service.addLanguage(languageDto);
+        return ResponseEntity.ok(new MessageResponse("Language added successfully"));
     }
 
     @DeleteMapping("/languages/{id}")
-    public ResponseEntity<String> deleteLanguage(@PathVariable Short id) {
-        try {
-            service.deleteLanguage(id);
-            return ResponseEntity.ok("Language deleted successfully");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<MessageResponse> deleteLanguage(@PathVariable Short id) {
+        service.deleteLanguage(id);
+        return ResponseEntity.ok(new MessageResponse("Language deleted successfully"));
     }
     
     //CATEGORIES
@@ -137,23 +99,15 @@ public class AdminController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<String> addCategory(@RequestBody CategoryDto categoryDto) {
-        try {
-        	service.addCategory(categoryDto);
-            return ResponseEntity.ok("Category added successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<MessageResponse> addCategory(@RequestBody CategoryDto categoryDto) {
+        service.addCategory(categoryDto);
+        return ResponseEntity.ok(new MessageResponse("Category added successfully"));
     }
 
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Short id) {
-        try {
-        	service.deleteCategory(id);
-            return ResponseEntity.ok("Category deleted successfully");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<MessageResponse> deleteCategory(@PathVariable Short id) {
+        service.deleteCategory(id);
+        return ResponseEntity.ok(new MessageResponse("Category deleted successfully"));
     }
     
     //ACTORS
@@ -165,22 +119,14 @@ public class AdminController {
     }
 
     @PostMapping("/actors")
-    public ResponseEntity<String> addActor(@RequestBody ActorDto actorDto) {
-        try {
-        	service.addActor(actorDto);
-            return ResponseEntity.ok("Actor added successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<MessageResponse> addActor(@RequestBody ActorDto actorDto) {
+        service.addActor(actorDto);
+        return ResponseEntity.ok(new MessageResponse("Actor added successfully"));
     }
 
     @DeleteMapping("/actors/{id}")
-    public ResponseEntity<String> deleteActor(@PathVariable Short id) {
-        try {
-        	service.deleteActor(id);
-            return ResponseEntity.ok("Actor deleted successfully");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<MessageResponse> deleteActor(@PathVariable Short id) {
+        service.deleteActor(id);
+        return ResponseEntity.ok(new MessageResponse("Actor deleted successfully"));
     }
 }

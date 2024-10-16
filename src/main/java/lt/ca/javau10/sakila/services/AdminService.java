@@ -6,9 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lt.ca.javau10.sakila.exceptions.ResourceNotFoundException;
 import lt.ca.javau10.sakila.models.Actor;
 import lt.ca.javau10.sakila.models.Category;
@@ -54,6 +54,7 @@ public class AdminService {
     
     //USERS
     
+    @Transactional(readOnly = true)
     public List<AdminUserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         List<AdminUserDto> userDtos = new ArrayList<>();
@@ -69,16 +70,15 @@ public class AdminService {
         return userDtos;
     }
 
+    @Transactional
     public void updateUser(int userId, AdminUserDto updateDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Customer customer = user.getCustomer();
 
-        // Update enabled status
         customer.setActive(updateDto.isEnabled() ? (byte) 1 : (byte) 0);
         customerRepository.save(customer);
 
-        // Update roles
         updateRole(user, "USER", updateDto.isUserRole());
         updateRole(user, "ADMIN", updateDto.isAdminRole());
 
@@ -97,6 +97,7 @@ public class AdminService {
 
     //MOVIES
     
+    @Transactional(readOnly = true)
     public List<MovieDto> getAllMovies() {    	
         return movieRepository.findAll()
                 .stream()
@@ -116,7 +117,7 @@ public class AdminService {
                     movie.getReplacementCost(),
                     movie.getRentalDuration(),
                     movie.getActor().stream()
-                         .map(actor -> actor.getFirstName() + " " + actor.getLastName()) // Map actor details
+                         .map(actor -> actor.getFirstName() + " " + actor.getLastName())
                          .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
@@ -145,7 +146,7 @@ public class AdminService {
             .map(categoryName -> categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category: " + categoryName)))
             .collect(Collectors.toList());
-        movie.setCategory(categories);  // Set the categories
+        movie.setCategory(categories);
        
         List<Actor> actors = movieDto.getActors().stream()
                 .map(actorName -> {
@@ -165,11 +166,9 @@ public class AdminService {
     
     @Transactional
     public void updateMovie(Short movieId, MovieDto movieDto) {
-        // Fetch the existing movie
         Movie existingMovie = movieRepository.findById(movieId)
             .orElseThrow(() -> new IllegalArgumentException("Movie with id " + movieId + " not found"));
 
-        // Update the movie fields with values from the DTO
         existingMovie.setTitle(movieDto.getTitle());
         existingMovie.setDescription(movieDto.getDescription());
         existingMovie.setReleaseYear(movieDto.getReleaseYear());
@@ -180,19 +179,16 @@ public class AdminService {
         existingMovie.setReplacementCost(movieDto.getReplacementCost());
         existingMovie.setRentalDuration(movieDto.getRentalDuration());
 
-        // Update language
         Language language = languageRepository.findByName(movieDto.getLanguage())
             .orElseThrow(() -> new IllegalArgumentException("Invalid language: " + movieDto.getLanguage()));
         existingMovie.setLanguage(language);
 
-        // Update categories
         List<Category> categories = movieDto.getCategory().stream()
             .map(categoryName -> categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category: " + categoryName)))
             .collect(Collectors.toList());
         existingMovie.setCategory(categories);
 
-        // Update actors
         List<Actor> actors = movieDto.getActors().stream()
             .map(actorName -> {
                 String[] nameParts = actorName.split(" ");
@@ -205,7 +201,6 @@ public class AdminService {
             .collect(Collectors.toList());
         existingMovie.setActors(actors);
 
-        // Save the updated movie
         movieRepository.save(existingMovie);
     }
     
@@ -219,6 +214,7 @@ public class AdminService {
     
     //LANGUAGES
     
+    @Transactional(readOnly = true)
     public List<LanguageDto> getAllLanguages() {
         return languageRepository.findAll()
                 .stream()
@@ -226,6 +222,7 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public LanguageDto addLanguage(LanguageDto languageDto) {
         if (languageRepository.existsByName(languageDto.getName())) {
             throw new IllegalArgumentException("Language already exists");
@@ -235,6 +232,7 @@ public class AdminService {
         return new LanguageDto(savedLanguage.getLanguageId(), savedLanguage.getName());
     }
 
+    @Transactional
     public void deleteLanguage(Short id) {
         Language language = languageRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Language not found"));
@@ -246,6 +244,7 @@ public class AdminService {
     
     //CATEGORIES
     
+    @Transactional(readOnly = true)
     public List<CategoryDto> getAllCategories() {
         return categoryRepository.findAll()
                 .stream()
@@ -253,6 +252,7 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public CategoryDto addCategory(CategoryDto categoryDto) {
         if (categoryRepository.existsByName(categoryDto.getName())) {
             throw new IllegalArgumentException("Category already exists");
@@ -262,6 +262,7 @@ public class AdminService {
         return new CategoryDto(savedCategory.getCategoryId(), savedCategory.getName());
     }
 
+    @Transactional
     public void deleteCategory(Short id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
@@ -273,6 +274,7 @@ public class AdminService {
     
     //ACTORS
     
+    @Transactional(readOnly = true)
     public List<ActorDto> getAllActors() {
         return actorRepository.findAll()
                 .stream()
@@ -280,12 +282,14 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public ActorDto addActor(ActorDto actorDto) {
         Actor actor = new Actor(actorDto.getFirstName(), actorDto.getLastName());
         Actor savedActor = actorRepository.save(actor);
         return new ActorDto(savedActor.getActorId(), savedActor.getFirstName(), savedActor.getLastName());
     }
 
+    @Transactional
     public void deleteActor(Short id) {
         Actor actor = actorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Actor not found"));

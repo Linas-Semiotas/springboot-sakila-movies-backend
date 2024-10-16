@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lt.ca.javau10.sakila.models.User;
 import lt.ca.javau10.sakila.exceptions.UsernameAlreadyExistsException;
@@ -60,7 +61,15 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
     
-    //Registration functionality
+    //HELPER
+    
+    public Optional<User> getUserByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+    
+    //REGISTER
+    
+    @Transactional
 	public void register(RegisterDto registerDto) {
 		Optional<User> existingUser = userRepository.findByUsername(registerDto.getUsername());
 		if (existingUser.isPresent()) {
@@ -84,13 +93,9 @@ public class AuthService {
         customer.setUser(savedUser);
         customerRepository.save(customer);
     }
-
-	//Finding user in repository
-    public Optional<User> getUserByUsername(String username) {
-		return userRepository.findByUsername(username);
-	}
 	
-    //Login functionality
+    //LOGIN
+	
     public JwtResponse login(LoginDto loginDto) {
     	Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())

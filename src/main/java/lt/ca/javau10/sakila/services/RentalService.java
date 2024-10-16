@@ -7,9 +7,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import lt.ca.javau10.sakila.exceptions.InsufficientBalanceException;
+import lt.ca.javau10.sakila.exceptions.InventoryNotAvailableException;
 import lt.ca.javau10.sakila.exceptions.MovieNotFoundException;
-import lt.ca.javau10.sakila.exceptions.RentalNotFoundException;
 import lt.ca.javau10.sakila.exceptions.UserNotFoundException;
 import lt.ca.javau10.sakila.models.Inventory;
 import lt.ca.javau10.sakila.models.Movie;
@@ -43,6 +45,7 @@ public class RentalService {
         this.userService = userService;
     }
 	
+    @Transactional(readOnly = true)
 	public List<RentalDto> getAllRentals() {
         List<Movie> movies = movieRepository.findAll();
         
@@ -57,9 +60,10 @@ public class RentalService {
                 .collect(Collectors.toList());
     }
     
+    @Transactional(readOnly = true)
     public RentalDto getRentalById(Short id, String username) {
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new RentalNotFoundException("Rental with ID " + id + " not found"));
+                .orElseThrow(() -> new MovieNotFoundException("Movie with ID " + id + " not found"));
         
         Double balance = userService.getUserBalance(username);
         
@@ -73,6 +77,7 @@ public class RentalService {
         );
     }
     
+    @Transactional
     public void rentMovie(Short movieId, String username) {
     	if (movieId == null) {
             throw new IllegalArgumentException("Movie ID must not be null");
@@ -85,17 +90,17 @@ public class RentalService {
                 .orElseThrow(() -> new MovieNotFoundException("Movie not found"));
         
         BigDecimal rentalRate = movie.getRentalRate();
-        double balance = user.getBalance();
+        BigDecimal balance = BigDecimal.valueOf(user.getBalance());
         
-        if (BigDecimal.valueOf(balance).compareTo(rentalRate) < 0) {
-        	throw new IllegalArgumentException("Insufficient balance.");
+        if (balance.compareTo(rentalRate) < 0) {
+            throw new InsufficientBalanceException("Insufficient balance to rent the movie.");
         }
 
         Optional<Inventory> inventoryOpt = inventoryRepository.findFirstByMovieFilmIdAndStoreStoreId(
                 movie.getFilmId(), user.getCustomer().getStoreId());
 
         if (inventoryOpt.isEmpty()) {
-        	throw new RuntimeException("No available inventory for this movie.");
+            throw new InventoryNotAvailableException("No available inventory for this movie.");
         }
 
         Inventory inventory = inventoryOpt.get();
@@ -109,7 +114,7 @@ public class RentalService {
 
         rentalRepository.save(rental);
 
-        user.setBalance(user.getBalance() - rentalRate.doubleValue());
+        user.setBalance(balance.subtract(rentalRate).doubleValue());
         userRepository.save(user);
     }
 }

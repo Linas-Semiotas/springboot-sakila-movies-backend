@@ -194,6 +194,12 @@ At this point, the backend will be connected to the modified Sakila database and
 -   ```bash
     ./mvnw spring-boot:run
     ```
+    
+## Admin Role Assignment
+By default, when registering users, the system automatically checks if there are any existing users with the "ADMIN" role. If no admin is found, the first registered user will be assigned the "ADMIN" role automatically.
+
+Default Password: Upon user generation, the default password for all users is set to `'password'`. It is recommended to change this password immediately after the first login.
+
 ## Contact
 - Name: Linas Šemiotas
 - Email: linas.semiotas@gmail.com

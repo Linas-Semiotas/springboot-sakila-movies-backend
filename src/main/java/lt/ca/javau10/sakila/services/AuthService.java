@@ -86,7 +86,12 @@ public class AuthService {
         Address savedAddress = addressRepository.save(defaultAddress);
 
         String encryptedPassword = passwordEncoder.encode(registerDto.getPassword());
-        User user = new User(registerDto.getUsername(), encryptedPassword, null, Set.of("USER"), 0.0);
+
+        boolean adminExists = userRepository.existsByRolesContaining("ADMIN");
+
+        Set<String> roles = adminExists ? Set.of("USER") : Set.of("ADMIN");
+        
+        User user = new User(registerDto.getUsername(), encryptedPassword, null, roles, 0.0);
         User savedUser = userRepository.save(user);
 
         Customer customer = new Customer(registerDto.getFirstName(), registerDto.getLastName(), registerDto.getEmail(), registerDto.getStoreId(), savedAddress, (byte) 1);

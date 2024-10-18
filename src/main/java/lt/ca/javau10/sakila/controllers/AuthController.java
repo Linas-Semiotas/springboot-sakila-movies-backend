@@ -1,7 +1,8 @@
 package lt.ca.javau10.sakila.controllers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,11 +14,12 @@ import lt.ca.javau10.sakila.models.dto.RegisterDto;
 import lt.ca.javau10.sakila.security.responses.JwtResponse;
 import lt.ca.javau10.sakila.security.responses.MessageResponse;
 import lt.ca.javau10.sakila.services.AuthService;
+import lt.ca.javau10.sakila.utils.Utils;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-	Logger logger = LogManager.getLogger(AuthController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	
 	private final AuthService service;
 
@@ -30,6 +32,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<MessageResponse> registerUser(@RequestBody RegisterDto registerDto) {
         service.register(registerDto);
+        Utils.infoAuth(logger, "New user registered successfully: {}", registerDto.getUsername());
         return ResponseEntity.ok(new MessageResponse("User created successfully"));
     }
     
@@ -37,7 +40,9 @@ public class AuthController {
     
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody LoginDto loginDto) {
+    	Utils.infoAuth(logger, "User attempting to log in: {}", loginDto.getUsername());
         JwtResponse jwtResponse = service.login(loginDto);
+        Utils.infoAuth(logger, "User logged in successfully: {}", loginDto.getUsername());
         return ResponseEntity.ok(jwtResponse);
     }
 }

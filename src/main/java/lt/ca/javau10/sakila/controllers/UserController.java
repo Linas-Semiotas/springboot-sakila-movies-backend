@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +22,13 @@ import lt.ca.javau10.sakila.models.dto.OrdersDto;
 import lt.ca.javau10.sakila.models.dto.PersonalInfoDto;
 import lt.ca.javau10.sakila.security.responses.MessageResponse;
 import lt.ca.javau10.sakila.services.UserService;
+import lt.ca.javau10.sakila.utils.Utils;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	
     private final UserService service;
 
     public UserController(UserService service) {
@@ -51,7 +55,9 @@ public class UserController {
     @PostMapping("/balance/add")
     public ResponseEntity<?> addBalance(@RequestBody Map<String, Double> request, Principal principal) {
         Double amount = request.get("amount");
+        String username = principal.getName();
         Double newBalance = service.addBalance(principal.getName(), amount);
+        Utils.infoUser(logger, "User {} is adding balance of amount: {}", username, amount);
         return ResponseEntity.ok(newBalance);
     }
     
@@ -66,8 +72,10 @@ public class UserController {
 
     @PutMapping("/profile/personal-info")
     public ResponseEntity<MessageResponse> updatePersonalInfo(@RequestBody PersonalInfoDto personalInfoDto, Principal principal) {
+    	String username = principal.getName();
         User user = service.getUserByUsername(principal.getName());
         service.updatePersonalInfo(user.getUserId(), personalInfoDto);
+        Utils.infoUser(logger, "User {} has updated their personal information", username);
         return ResponseEntity.ok(new MessageResponse("Personal information updated successfully"));
     }
 
@@ -80,8 +88,10 @@ public class UserController {
 
     @PutMapping("/profile/address-info")
     public ResponseEntity<MessageResponse> updateAddressInfo(@RequestBody AddressInfoDto addressInfoDto, Principal principal) {
+    	String username = principal.getName();
         User user = service.getUserByUsername(principal.getName());
         service.updateAddressInfo(user.getUserId(), addressInfoDto);
+        Utils.infoUser(logger, "User {} has updated their address information", username);
         return ResponseEntity.ok(new MessageResponse("Address information updated successfully"));
     }
     
@@ -89,7 +99,9 @@ public class UserController {
     
     @PostMapping("/security/change-password")
     public ResponseEntity<MessageResponse> changePassword(@RequestBody ChangePasswordDto changePasswordDto, Principal principal) {
+    	String username = principal.getName();
         service.changePassword(principal.getName(), changePasswordDto.getCurrentPassword(), changePasswordDto.getNewPassword());
+        Utils.infoUser(logger, "User {} changed their password", username);
         return ResponseEntity.ok(new MessageResponse("Password changed successfully"));
     }
 }

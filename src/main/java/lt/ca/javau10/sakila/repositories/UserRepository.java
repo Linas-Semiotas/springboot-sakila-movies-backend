@@ -11,4 +11,5 @@ import lt.ca.javau10.sakila.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findByUsername(String username);
+	boolean existsByRolesContaining(String string);
 }

@@ -3,6 +3,8 @@ package lt.ca.javau10.sakila.controllers;
 import java.security.Principal;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,8 @@ import lt.ca.javau10.sakila.services.RentalService;
 @RestController
 @RequestMapping("/api/rental")
 public class RentalController {
-    
+	private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+	
     private final RentalService service;
 
     public RentalController(RentalService service) {
@@ -36,6 +39,7 @@ public class RentalController {
     public ResponseEntity<MessageResponse> rentMovie(@RequestBody MovieDto movieDto, Principal principal) {
         String username = principal.getName();
         service.rentMovie(movieDto.getId(), username);
+        logger.info("User {} has rented the movie", username);
         return ResponseEntity.ok(new MessageResponse("Movie rented successfully"));
     }
 

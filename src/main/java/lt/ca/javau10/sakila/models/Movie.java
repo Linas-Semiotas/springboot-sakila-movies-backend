@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lt.ca.javau10.sakila.utils.RatingConverter;
 
 @Entity
 @Table(name="film")
@@ -27,7 +28,7 @@ public class Movie {
     @Column(name = "length")
     private Short filmLength;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = RatingConverter.class)
     @Column(name = "rating")
     private Rating rating;
     

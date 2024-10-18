@@ -98,6 +98,7 @@ public class UserService {
     }
     
     //PROFILE
+    //PERSONAL INFO
     
     @Transactional(readOnly = true)
     public PersonalInfoDto getPersonalInfo(int userId) {
@@ -115,7 +116,6 @@ public class UserService {
         return dto;
     }
 
-    //Update personal information
     @Transactional
     public void updatePersonalInfo(int userId, PersonalInfoDto personalInfoDto) {
         Customer customer = customerRepository.findByUser_UserId(userId)
@@ -132,7 +132,9 @@ public class UserService {
         addressRepository.save(address);
     }
     
-    //Get address information based on user ID
+    //PROFILE
+    //ADDRESS INFO
+
     @Transactional(readOnly = true)
     public AddressInfoDto getAddressInfo(int userId) {
         Customer customer = customerRepository.findByUser_UserId(userId)
@@ -149,7 +151,6 @@ public class UserService {
         );
     }
 
-    //Update address information
     @Transactional
     public void updateAddressInfo(int userId, AddressInfoDto addressInfoDto) {
         Customer customer = customerRepository.findByUser_UserId(userId)

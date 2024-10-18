@@ -44,6 +44,8 @@ public class RentalService {
         this.userRepository = userRepository;
         this.userService = userService;
     }
+    
+    //RENTAL
 	
     @Transactional(readOnly = true)
 	public List<RentalDto> getAllRentals() {

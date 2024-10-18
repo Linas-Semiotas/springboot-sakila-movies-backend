@@ -36,6 +36,4 @@ public class ActorDto {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-	
 }

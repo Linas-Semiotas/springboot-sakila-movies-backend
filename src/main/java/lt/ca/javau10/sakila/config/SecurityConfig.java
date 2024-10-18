@@ -30,7 +30,6 @@ public class SecurityConfig {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
-    //Security settings bean
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -62,7 +61,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // AuthenticationManager bean
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

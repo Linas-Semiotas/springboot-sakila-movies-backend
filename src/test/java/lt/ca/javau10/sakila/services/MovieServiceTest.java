@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import lt.ca.javau10.sakila.exceptions.MovieNotFoundException;
 import lt.ca.javau10.sakila.models.Movie;
 import lt.ca.javau10.sakila.models.dto.MovieDto;
 import lt.ca.javau10.sakila.repositories.MovieRepository;
@@ -93,10 +94,12 @@ public class MovieServiceTest {
         // Arrange
         when(movieRepository.findById((short) 999)).thenReturn(Optional.empty());
 
-        // Act
-        MovieDto result = movieService.findMovieById((short) 999);
+        // Act & Assert
+        MovieNotFoundException thrown = assertThrows(MovieNotFoundException.class, () -> {
+            movieService.findMovieById((short) 999);
+        });
 
-        // Assert
-        assertNull(result);
+        // Assert that the exception message is correct
+        assertEquals("Movie with ID 999 not found", thrown.getMessage());
     }
 }

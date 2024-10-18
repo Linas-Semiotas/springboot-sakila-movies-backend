@@ -1,6 +1,5 @@
 package lt.ca.javau10.sakila.repositories;
 
-
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;

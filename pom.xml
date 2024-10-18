@@ -31,7 +31,8 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-	
+		
+		<!-- Spring Boot Dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -41,22 +42,25 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		
+		<!-- MySQL Database Driver -->
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		
+		<!-- Spring Security -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+		<!-- Testing Dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		
 		<dependency>
@@ -77,12 +81,14 @@
 		    <scope>test</scope>
 		</dependency>
 		
+		<!-- OpenAPI for API Documentation / Swager UI -->
 		<dependency>
 		    <groupId>org.springdoc</groupId>
 		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 		    <version>2.6.0</version>
 		</dependency>
        
+       <!-- JWT for Token Management -->
        <dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-api</artifactId>
@@ -97,16 +103,30 @@
 		</dependency>
 		
 		<dependency>
-	        <groupId>jakarta.servlet</groupId>
-	        <artifactId>jakarta.servlet-api</artifactId>
-	        <scope>provided</scope>
-	    </dependency>
-    
-		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-jackson</artifactId>
 		    <version>0.11.5</version>
 		    <scope>runtime</scope>
+		</dependency>
+		
+		<!-- Servlet API for error handling -->
+		<dependency>
+		    <groupId>jakarta.servlet</groupId>
+		    <artifactId>jakarta.servlet-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<!-- Geometry -->
+		<dependency>
+		    <groupId>org.locationtech.jts</groupId>
+		    <artifactId>jts-core</artifactId>
+		    <version>1.18.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-spatial</artifactId>
+		    <version>6.5.3.Final</version>
 		</dependency>
 
 	</dependencies>

@@ -19,6 +19,8 @@ public class StoreService {
         this.repository = repository;
     }
     
+    //STORES
+    
     @Transactional(readOnly = true)
     public List<StoreDto> getAllStores() {
         List<Store> stores = repository.findAll();
@@ -26,9 +28,9 @@ public class StoreService {
         return stores.stream()
                  .map(store -> new StoreDto(
                 		store.getStoreId(),
-            			store.getAddress().getCity().getCountry().getCountry(),
+                		store.getAddress().getAddress(),
             			store.getAddress().getCity().getCity(),
-            			store.getAddress().getAddress() 
+            			store.getAddress().getCity().getCountry().getCountry()
         		 ))
                  .collect(Collectors.toList());
     }

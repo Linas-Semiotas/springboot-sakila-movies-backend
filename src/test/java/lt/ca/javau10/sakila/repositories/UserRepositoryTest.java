@@ -1,56 +1,46 @@
 package lt.ca.javau10.sakila.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Optional;
-import java.util.Set;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Optional;
+import java.util.Set;
+
 import lt.ca.javau10.sakila.models.User;
 
-@DataJpaTest
+@DataJpaTest  // Configures an in-memory database and loads repository beans
 public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
-    
-    private User user;
-
-    @BeforeEach
-    public void setUp() {
-        // Initialize a new user before each test
-        user = new User("john_doe", "password123", null, Set.of("USER"), 0.0);
-    }
-
-    @Test
-    public void testSaveUser() {
-        User savedUser = userRepository.save(user);
-        assertNotNull(savedUser);
-        assertEquals("john_doe", savedUser.getUsername());
-    }
 
     @Test
     public void testFindByUsername() {
-        userRepository.save(user); // Save the user first
+        // Given: Create and save a new user
+        User user = new User();
+        user.setUsername("testuser");
+        user.setPassword("password123");
+        user.setBalance(100.0);  // Ensure all fields are set
+        user.setRoles(Set.of("ROLE_USER"));
+        user = userRepository.save(user);  // Save user
 
-        Optional<User> foundUser = userRepository.findByUsername("john_doe");
-        
-        // Check that the user is found (Optional is present)
-        assertTrue(foundUser.isPresent());
-        
-        // Extract the user from Optional and verify the username
-        assertEquals("john_doe", foundUser.get().getUsername());
+        // When: Find the user by username
+        Optional<User> foundUser = userRepository.findByUsername("testuser");
+
+        // Then: Verify the user was found and the details are correct
+        assertTrue(foundUser.isPresent(), "User should be found");
+        assertEquals("testuser", foundUser.get().getUsername(), "Username should match");
+        assertEquals("password123", foundUser.get().getPassword(), "Password should match");
     }
 
     @Test
     public void testFindByUsername_NotFound() {
-        Optional<User> foundUser = userRepository.findByUsername("non_existing_user");
-        
-        // Check that the Optional is empty (user not found)
-        assertTrue(foundUser.isEmpty());
+        // When: Try to find a user with a non-existent username
+        Optional<User> foundUser = userRepository.findByUsername("nonexistentuser");
+
+        // Then: Verify the user is not found
+        assertFalse(foundUser.isPresent(), "User should not be found for a non-existent username");
     }
 }

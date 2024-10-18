@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import lt.ca.javau10.sakila.exceptions.MovieNotFoundException;
 import lt.ca.javau10.sakila.models.Movie;
 import lt.ca.javau10.sakila.models.dto.RentalDto;
 import lt.ca.javau10.sakila.repositories.MovieRepository;
@@ -22,6 +23,9 @@ public class RentalServiceTest {
 
     @InjectMocks
     private RentalService rentalService;
+    
+    @Mock
+    private UserService userService;
 
     @Mock
     private MovieRepository movieRepository;
@@ -89,9 +93,10 @@ public class RentalServiceTest {
     public void testGetRentalById_Found() {
         // Arrange: Mock the repository to return a movie by ID
         when(movieRepository.findById((short) 1)).thenReturn(Optional.of(movie1));
+        when(userService.getUserBalance(anyString())).thenReturn(100.0); // Mock user balance
 
         // Act: Call the service method
-        RentalDto rentalDto = rentalService.getRentalById((short) 1, null);
+        RentalDto rentalDto = rentalService.getRentalById((short) 1, "someUser");
 
         // Assert: Verify the result
         assertNotNull(rentalDto);
@@ -101,22 +106,27 @@ public class RentalServiceTest {
         assertEquals(rentalDto1.getReplacementCost(), rentalDto.getReplacementCost());
         assertEquals(rentalDto1.getRentalDuration(), rentalDto.getRentalDuration());
 
-        // Verify that the repository was called once
+        // Verify that the repository and userService were called once
         verify(movieRepository, times(1)).findById((short) 1);
+        verify(userService, times(1)).getUserBalance(anyString());
     }
+
 
     @Test
     public void testGetRentalById_NotFound() {
         // Arrange: Mock the repository to return an empty Optional
         when(movieRepository.findById((short) 1)).thenReturn(Optional.empty());
 
-        // Act: Call the service method
-        RentalDto rentalDto = rentalService.getRentalById((short) 1, null);
+        // Act & Assert: Expect MovieNotFoundException
+        MovieNotFoundException thrown = assertThrows(MovieNotFoundException.class, () -> {
+            rentalService.getRentalById((short) 1, "someUser");
+        });
 
-        // Assert: Verify the result
-        assertNull(rentalDto);
+        // Verify that the exception message is correct
+        assertEquals("Movie with ID 1 not found", thrown.getMessage());
 
         // Verify that the repository was called once
         verify(movieRepository, times(1)).findById((short) 1);
     }
+
 }

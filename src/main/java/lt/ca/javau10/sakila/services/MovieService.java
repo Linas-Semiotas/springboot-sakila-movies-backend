@@ -23,6 +23,8 @@ public class MovieService {
         this.repository = repository;
     }
     
+    //MOVIES
+    
     @Transactional(readOnly = true)
     public List<MovieDto> findAllMovies() {
         return repository.findAll().stream()
@@ -30,13 +32,14 @@ public class MovieService {
             .collect(Collectors.toList());
     }
 
-    // Fetch a single movie by ID
     @Transactional(readOnly = true)
     public MovieDto findMovieById(Short id) {
         return repository.findById(id)
             .map(this::convertToDto)
             .orElseThrow(() -> new MovieNotFoundException("Movie with ID " + id + " not found"));
     }
+    
+    //Convert to Dto that matches both methods 
     
     private MovieDto convertToDto(Movie movie) {
     	List<String> category = Optional.ofNullable(movie.getCategory())

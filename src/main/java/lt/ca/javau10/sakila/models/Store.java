@@ -1,6 +1,11 @@
 package lt.ca.javau10.sakila.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name="store")
@@ -17,7 +22,7 @@ public class Store {
 	public Byte getStoreId() {
 		return storeId;
 	}
-	
+
 	public void setStoreId(Byte storeId) {
 		this.storeId = storeId;
 	}
@@ -25,9 +30,8 @@ public class Store {
 	public Address getAddress() {
 		return address;
 	}
-	
+
 	public void setAddress(Address address) {
 		this.address = address;
 	}
 }
-

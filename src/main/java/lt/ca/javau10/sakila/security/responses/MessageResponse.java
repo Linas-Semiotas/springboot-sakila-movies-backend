@@ -1,5 +1,6 @@
 package lt.ca.javau10.sakila.security.responses;
 
+//Class for sending message to client side
 public class MessageResponse {
     private String message;
 

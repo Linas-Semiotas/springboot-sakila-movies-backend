@@ -1,7 +1,9 @@
 package lt.ca.javau10.sakila.utils;
 
 public class Utils {
+	//Takes string and turn first letter of every word to capital letter
 	public static String capitalize(String str) {
+		
 	    if (str == null || str.isEmpty()) {
 	        return str;
 	    }

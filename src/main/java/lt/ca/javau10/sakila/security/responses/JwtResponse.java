@@ -2,20 +2,19 @@ package lt.ca.javau10.sakila.security.responses;
 
 import java.util.List;
 
+//Class for sending response back to the client after successful authentication
 public class JwtResponse {
 	private String token;
     private String type = "Bearer";
     private String username;
     private List<String> roles;
 
-    // Constructor with fields
     public JwtResponse(String token, String username, List<String> roles) {
         this.token = token;
         this.username = username;
         this.roles = roles;
     }
 
-    // Getters and Setters
     public String getToken() {
         return token;
     }

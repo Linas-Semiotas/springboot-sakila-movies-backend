@@ -40,14 +40,13 @@ public class JwtUtil {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         claims.put("roles", roles);
-        //claims.put("roles", userDetails.getAuthorities());
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())  // Token issue date
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))  // Token expiration
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)  // Use SecretKey and HS512
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 

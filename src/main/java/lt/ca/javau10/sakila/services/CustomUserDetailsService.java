@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final AuthService authService;
-
+    // @Lazy prevents circular dependency issues when injecting AuthService
     public CustomUserDetailsService(@Lazy AuthService authService) {
         this.authService = authService;
     }

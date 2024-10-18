@@ -31,13 +31,13 @@ public class Movie {
     @Column(name = "rating")
     private Rating rating;
     
-    @Column(name = "rental_rate")
+    @Column(name = "rental_rate", nullable = false)
     private BigDecimal rentalRate;
     
-    @Column(name = "replacement_cost")
+    @Column(name = "replacement_cost", nullable = false)
     private BigDecimal replacementCost;
     
-    @Column(name = "rental_duration")
+    @Column(name = "rental_duration", nullable = false)
     private Short rentalDuration;
     
     @Column(name = "special_features")

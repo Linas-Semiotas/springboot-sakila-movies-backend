@@ -21,7 +21,7 @@ public class Rental {
     @Column(name = "rental_id")
     private Integer id;
 
-    @Column(name = "rental_date")
+    @Column(name = "rental_date", nullable = false)
     private LocalDateTime rentalDate;
 
     @Column(name = "return_date")
@@ -35,7 +35,7 @@ public class Rental {
     @JoinColumn(name = "customer_id")
     private Customer customer;
     
-    @Column(name = "staff_id")
+    @Column(name = "staff_id", nullable = false)
     private Byte staffId;
 
 	public Rental() {}

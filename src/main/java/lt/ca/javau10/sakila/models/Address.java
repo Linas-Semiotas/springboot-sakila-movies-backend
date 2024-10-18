@@ -1,6 +1,17 @@
 package lt.ca.javau10.sakila.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 
 @Entity
 @Table(name = "address")
@@ -14,7 +25,7 @@ public class Address {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "district")
+    @Column(name = "district", nullable = false)
     private String district;
     
     @Column(name = "phone")
@@ -26,6 +37,9 @@ public class Address {
     @OneToOne
     @JoinColumn(name = "city_id", referencedColumnName = "city_id")
     private City city;
+    
+    @Column(name = "location", columnDefinition = "geometry")
+    private Geometry location;
 
 	public Address() {}
 
@@ -35,7 +49,13 @@ public class Address {
 		this.phone = phone;
 		this.postalCode = postalCode;
 		this.city = city;
+		this.location = createDefaultLocation();
 	}
+	
+	private static Geometry createDefaultLocation() {
+        GeometryFactory geometryFactory = new GeometryFactory();
+        return geometryFactory.createPoint(new Coordinate(0, 0));
+    }
 
 	public Short getAddressId() {
 		return addressId;

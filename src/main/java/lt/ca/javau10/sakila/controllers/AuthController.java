@@ -25,11 +25,15 @@ public class AuthController {
         this.service = service;
     }
 	
+    //REGISTER
+    
     @PostMapping("/register")
     public ResponseEntity<MessageResponse> registerUser(@RequestBody RegisterDto registerDto) {
         service.register(registerDto);
         return ResponseEntity.ok(new MessageResponse("User created successfully"));
     }
+    
+    //LOGIN
     
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody LoginDto loginDto) {

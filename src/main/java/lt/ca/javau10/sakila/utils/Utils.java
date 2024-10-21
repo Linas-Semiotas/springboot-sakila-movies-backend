@@ -8,6 +8,8 @@ public class Utils {
     private static final String BRIGHT_BLUE = "\033[94m";
     private static final String BRIGHT_GREEN = "\033[92m";
     private static final String BRIGHT_MAGENTA = "\033[95m";
+    private static final String BRIGHT_RED = "\033[91m";
+
 	
 	//Takes string and turn first letter of every word to capital letter
 	public static String capitalize(String str) {
@@ -42,5 +44,10 @@ public class Utils {
     // Utility method for [ADMIN] log with BRIGHT_MAGENTA color
     public static void infoAdmin(Logger logger, String message, Object... args) {
         logger.info(BRIGHT_MAGENTA + "[ADMIN] " + RESET + message, args);
+    }
+    
+    // Utility method for [ERROR] log with BRIGHT_RED color
+    public static void errorAny(Logger logger, String message, Object... args) {
+        logger.info(BRIGHT_RED + "[ERROR] " + RESET + message, args);
     }
 }

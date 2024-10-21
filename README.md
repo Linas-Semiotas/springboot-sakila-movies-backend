@@ -43,6 +43,9 @@ RESTful API architecture for interaction between frontend and backend.
 ### Auth Controller
 - **POST** `/api/auth/register`: Register a new user.
 - **POST** `/api/auth/login`: Log in as a user.
+- **POST** `/api/auth/logout`: Terminates user session.
+- **POST** `/api/auth/refresh-token`: Generates a new access token if the user is active and token expired.
+- **GET** `/api/auth/me`: Returns current user information such as username and roles.
 
 ### Stores Controller
 - **GET** `/api/stores`: Fetch all stores (publicly accessible).
@@ -175,6 +178,20 @@ spring.datasource.url=jdbc:mysql://localhost:3306/sakila
 spring.datasource.username=<your-username>
 spring.datasource.password=<your-password>
 ```
+
+In the `application.properties` file located in `src/main/resources`, update the following properties:
+- `jwt.secret`: secret key for token generation.
+- `jwtExpirationMs`: token expiration time in miliseconds.
+- `cors.allowed.origins`: input your website url.
+- `cookie.secure`: `false` for development, `true` for production.
+
+``` properties
+jwt.secret=<secret-key>
+jwtExpirationMs=3600000
+cors.allowed.origins=http://localhost:3000
+cookie.secure=false
+```
+
 Run the application using Maven:
 
 ``` bash

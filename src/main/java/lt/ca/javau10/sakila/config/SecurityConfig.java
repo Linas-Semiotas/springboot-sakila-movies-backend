@@ -43,7 +43,7 @@ public class SecurityConfig {
                 configuration.setAllowedOrigins(List.of(allowedOrigins));
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowCredentials(true);
-                configuration.setAllowedHeaders(List.of("*"));//"Authorization", "Content-Type", "Accept", "Origin", "Cookie"
+                configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin", "Cookie"));//"Authorization", "Content-Type", "Accept", "Origin", "Cookie"
                 return configuration;
             }))
             .authorizeHttpRequests(authorize -> authorize

@@ -3,7 +3,6 @@ package lt.ca.javau10.sakila.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,26 +85,11 @@ public class AuthController {
     public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
         return service.getCurrentUser();
     }
-    
-    @GetMapping("/check-token")
-    public ResponseEntity<?> checkToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
-        if (authentication == null || "anonymousUser".equals(authentication.getPrincipal())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired.");
-        }
-
-        return ResponseEntity.ok("Token is valid.");
-    }
 
     // Refresh the token before it expires
     @PostMapping("/refresh-token")
     public ResponseEntity<JwtResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || "anonymousUser".equals(authentication.getPrincipal())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
 
         // Call the refreshToken method in the service
         JwtResponse newToken = service.refreshToken(authentication);
@@ -119,5 +103,4 @@ public class AuthController {
 
         return ResponseEntity.ok(newToken);
     }
-    
 }

@@ -17,6 +17,7 @@ import lt.ca.javau10.sakila.models.dto.MovieDto;
 import lt.ca.javau10.sakila.models.dto.RentalDto;
 import lt.ca.javau10.sakila.security.responses.MessageResponse;
 import lt.ca.javau10.sakila.services.RentalService;
+import lt.ca.javau10.sakila.utils.Utils;
 
 @RestController
 @RequestMapping("/api/rental")
@@ -39,7 +40,7 @@ public class RentalController {
     public ResponseEntity<MessageResponse> rentMovie(@RequestBody MovieDto movieDto, Principal principal) {
         String username = principal.getName();
         service.rentMovie(movieDto.getId(), username);
-        logger.info("User {} has rented the movie", username);
+        Utils.infoUser(logger, "User {} has rented the movie", username);
         return ResponseEntity.ok(new MessageResponse("Movie rented successfully"));
     }
 

@@ -1,10 +1,12 @@
 package lt.ca.javau10.sakila.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -116,5 +118,37 @@ public class AuthService {
                 .collect(Collectors.toList());
 
         return new JwtResponse(jwt, userDetails.getUsername(), roles);
-    }    
+    }
+    
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || "anonymousUser".equals(authentication.getPrincipal())) {
+            return ResponseEntity.ok(Map.of("message", "No user is logged in"));
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(Map.of(
+            "username", userDetails.getUsername(),
+            "roles", roles
+        ));
+    }
+    
+    public JwtResponse refreshToken(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        // Generate a new token
+        String newJwt = jwtUtil.generateToken(userDetails);
+
+        // Create a new JwtResponse (assuming you have this model)
+        List<String> roles = userDetails.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList());
+
+        return new JwtResponse(newJwt, userDetails.getUsername(), roles);
+    }
 }

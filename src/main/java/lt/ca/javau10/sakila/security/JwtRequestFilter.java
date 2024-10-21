@@ -12,6 +12,7 @@ import lt.ca.javau10.sakila.security.utils.JwtUtil;
 import lt.ca.javau10.sakila.services.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,21 +32,27 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader("Authorization");
-
         String username = null;
         String jwt = null;
+        
+        // Check if the token is present in the cookies
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    try {
 
-        // Check if the Authorization header contains a Bearer token
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            try {
-            	username = jwtUtil.getUsernameFromToken(jwt);
-            } catch (IllegalArgumentException e) {
-                logger.error("Unable to extract JWT token");
-            } catch (ExpiredJwtException e) {
-            	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token is expired. Please log in again.");
+                        username = jwtUtil.getUsernameFromToken(jwt);
+                    } catch (IllegalArgumentException e) {
+                        logger.error("Unable to extract JWT token");
+                    } catch (ExpiredJwtException e) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.getWriter().write("Token is expired. Please log in again.");
+                        return; // Stop further execution if the token is expired
+                    }
+                    break;
+                }
             }
         }
 
@@ -63,6 +70,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+        
         chain.doFilter(request, response);  // Continue with the request
     }
 }

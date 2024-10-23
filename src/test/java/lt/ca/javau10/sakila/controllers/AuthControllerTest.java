@@ -18,14 +18,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
 
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false) // Disable security filters for non-security testing
@@ -71,19 +72,25 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.message").value("User created successfully"));
     }
 
-    // Test for login and JWT response
     @Test
+    @WithMockUser(username = "john_doe", roles = {"USER"})
     public void testLogin() throws Exception {
-    	LoginDto loginDto = new LoginDto("john_doe", "password123");
-    	JwtResponse jwtResponse = new JwtResponse("mock-jwt-token", "john_doe", List.of("USER"));
+        // Valid LoginDto input
+        LoginDto loginDto = new LoginDto("john_doe", "password123"); // Ensure the username and password meet validation requirements
 
-    	when(authService.login(Mockito.eq(loginDto))).thenReturn(jwtResponse);
-        
-        // Perform the request and check the response
-    	mockMvc.perform(post("/api/auth/login")
-    	        .contentType(MediaType.APPLICATION_JSON)
-    	        .content(objectMapper.writeValueAsString(loginDto)))
-    	        .andExpect(status().isOk())
-    	        .andReturn().getResponse().getContentAsString();
+        // Mock the JwtResponse that the AuthService will return
+        JwtResponse jwtResponse = new JwtResponse("mock-jwt-token", "john_doe", List.of("USER"));
+
+        // Mock the service's login method to return the JwtResponse
+        when(authService.login(Mockito.any(LoginDto.class))).thenReturn(jwtResponse);
+
+        // Perform the POST request and check the response
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginDto)))  // Send valid JSON content
+                .andExpect(status().isOk())  // Expect HTTP 200 OK status
+                .andExpect(cookie().exists("token"))  // The JWT token cookie should exist
+                .andExpect(cookie().value("token", "mock-jwt-token"));  // The token value should match
     }
+
 }

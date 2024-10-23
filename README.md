@@ -1,7 +1,37 @@
 # Sakila Movies Backend
 
+## Overview
+This project is the backend for the **Sakila Movies** application. Built with **Spring Boot**, it provides a RESTful API for managing movie rentals, customer data, and administrative tasks. The backend enables CRUD operations on entities such as movies, actors, and customers, while incorporating role-based access control for users and admins.
+
+
 ## Description
 Sakila Movies is a web application built for the Sakila database, a test database used primarily for learning and portfolio purposes. The backend manages movies, stores, rentals, user profiles, and admin functionalities. The system uses JWT-based authentication for secure access. Roles are divided into USER and ADMIN for controlled access to features.
+
+## Getting Started
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/Linas-Semiotas/springboot-sakila-movies-backend.git
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd springboot-sakila-movies-backend
+    ```
+
+3. Configure the application by editing the `application.properties` file located in `src/main/resources`. Ensure that the database credentials match your local setup.
+
+4. Build the project:
+    ```bash
+    mvn clean install
+    ```
+
+5. Run the application:
+    ```bash
+    mvn spring-boot:run
+    ```
+
+6. The API will be accessible at `http://localhost:8080`.
 
 ## Features
 - **User Roles**: Two roles are supported: USER and ADMIN.
@@ -18,8 +48,20 @@ Sakila Movies is a web application built for the Sakila database, a test databas
 - Manage movies, actors, categories, and languages.
 - Modify user permissions and profiles.
 
+- **Movie Management**: CRUD functionality for movies, actors, and categories.
+- **User Management**: Admins can modify user roles, while users can update their own profile information.
+- **Rental Management**: Track rental orders.
+- **Role-Based Access Control**: Role-specific access for USER and ADMIN.
+
 ## API Design
 RESTful API architecture for interaction between frontend and backend.
+
+## Security Enhancements
+
+- **JWT Authentication**: JWT (JSON Web Token) is a compact, URL-safe means of representing claims between two parties, ensuring secure data exchange.
+- **Token Storage**: Tokens are stored in secure HTTP-only cookies to prevent XSS attacks.
+- **Session Management**: Automatic session expiration and token refresh to ensure user sessions are valid and secure.
+
 
 ## Technologies Used
 - **Java**: Version 21
@@ -93,6 +135,11 @@ RESTful API architecture for interaction between frontend and backend.
 #### Orders
 - **GET** `/api/user/orders`: Fetch user's rental orders.
 
+## API Documentation
+
+Once the application is running, you can access API documentation via Swagger at: `http://localhost:8080/swagger-ui.html`
+
+
 ## Database Setup (Using Official Sakila Database)
 The Sakila Movies backend uses the official Sakila database provided by MySQL for testing and learning purposes. In addition, the database has been modified to support authentication functionality. Follow these steps to install and modify the Sakila database:
 
@@ -146,7 +193,7 @@ ADD COLUMN `user_id` INT UNSIGNED DEFAULT NULL AFTER `customer_id`;
 -- Insert Users based on existing Customers
 INSERT INTO `users` (`username`, `password`, `balance`)
 SELECT CONCAT(`first_name`, `last_name`) AS `username`, 
-       '$2a$10$vkWxrCTbWsUYOMFgDSViBeLEFFPvC/pDfIkuVnieXcFwunAfKVSfy' AS `password`, 
+       '' AS `password`, 
        0 AS `balance`
 FROM `customer`
 WHERE `user_id` IS NULL;  -- Only for customers without a user_id
@@ -198,19 +245,6 @@ Run the application using Maven:
 ./mvnw spring-boot:run
 ```
 At this point, the backend will be connected to the modified Sakila database and ready to serve API requests.
-
-## Setup Instructions
-
-1. Clone the repository:
--   ``` bash
-    git clone https://github.com/Linas-Semiotas/springboot-sakila-movies-backend.git
-    ```
-2. Set up the MySQL database and configure the `application.properties` file with your database credentials.
-
-3. Run the application:
--   ```bash
-    ./mvnw spring-boot:run
-    ```
     
 ## Admin Role Assignment
 By default, when registering users, the system automatically checks if there are any existing users with the "ADMIN" role. If no admin is found, the first registered user will be assigned the "ADMIN" role automatically.

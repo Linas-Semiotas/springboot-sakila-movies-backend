@@ -21,7 +21,7 @@ public class MovieDto {
     private String title;
 
     @NotBlank(message = "Description is required")
-    @Size(max = 255, message = "Description must not exceed 1000 characters")
+    @Size(max = 255, message = "Description must not exceed 255 characters")
     private String description;
 
     @NotNull(message = "Release year is required")

@@ -104,10 +104,14 @@ public class AuthServiceTest {
 
     // Test for successful login
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test
+    @Test
     public void testLogin_Success() {
         // Arrange
         LoginDto loginDto = new LoginDto("john_doe", "password");
+
+        // Mock user repository to return a user
+        User mockUser = new User("john_doe", "encoded_password", null, Set.of("USER"), 100.0);
+        when(userRepository.findByUsername("john_doe")).thenReturn(Optional.of(mockUser));
 
         // Mock the authentication process
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
@@ -123,9 +127,7 @@ public class AuthServiceTest {
 
         // Create a properly parameterized Collection of GrantedAuthority
         Collection<GrantedAuthority> authorities = List.of(authority);
-        
-        // Cast to raw Collection type to satisfy Mockito's generic handling
-        when(userDetails.getAuthorities()).thenReturn((Collection) authorities); 
+        when(userDetails.getAuthorities()).thenReturn((Collection) authorities);
 
         // Mock the JWT token generation
         when(jwtUtil.generateToken(userDetails)).thenReturn("mock-jwt-token");
@@ -139,11 +141,6 @@ public class AuthServiceTest {
         assertEquals("john_doe", jwtResponse.getUsername());
         assertEquals("ROLE_USER", jwtResponse.getRoles().get(0));
     }
-
-
-
-
-
 
     // Test for failed login
     @Test

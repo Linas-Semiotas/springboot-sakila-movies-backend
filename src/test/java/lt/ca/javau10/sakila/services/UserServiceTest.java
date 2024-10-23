@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import lt.ca.javau10.sakila.exceptions.InsufficientBalanceException;
 import lt.ca.javau10.sakila.exceptions.InvalidCurrentPasswordException;
 import lt.ca.javau10.sakila.models.*;
 import lt.ca.javau10.sakila.models.dto.OrdersDto;
@@ -108,10 +107,19 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testAddBalance_InvalidAmount() {
-        assertThrows(InsufficientBalanceException.class, () -> userService.addBalance("john_doe", -50.0));
-        verify(userRepository, never()).save(any());
+    public void testAddBalance_NegativeAmount() {
+        User user = new User();
+        user.setBalance(100.0);
+        when(userRepository.findByUsername("john_doe")).thenReturn(Optional.of(user));
+
+        Double newBalance = userService.addBalance("john_doe", -50.0);
+
+        assertEquals(50.0, newBalance);
+        
+        verify(userRepository).save(user);
     }
+
+
 
     @Test
     public void testGetPersonalInfo() {

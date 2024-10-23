@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -215,12 +216,16 @@ public class AdminControllerTest {
     public void testDeleteActor() throws Exception {
         Short actorId = 1;
 
+        // Mocking adminService's deleteActor() method to do nothing (successful deletion)
         doNothing().when(adminService).deleteActor(actorId);
 
+        // Perform DELETE request and check for the successful response
         mockMvc.perform(delete("/api/admin/actors/{id}", actorId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Actor deleted successfully"));
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.message").value("Actor deleted successfully"));
 
-        verify(adminService).deleteActor(actorId);
+        // Verify that adminService.deleteActor(actorId) was called once
+        verify(adminService, times(1)).deleteActor(actorId);
     }
+
 }

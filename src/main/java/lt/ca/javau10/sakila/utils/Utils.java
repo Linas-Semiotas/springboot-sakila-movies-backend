@@ -1,5 +1,8 @@
 package lt.ca.javau10.sakila.utils;
 
+import java.security.SecureRandom;
+import java.util.Base64;
+
 import org.slf4j.Logger;
 
 public class Utils {
@@ -49,5 +52,12 @@ public class Utils {
     // Utility method for [ERROR] log with BRIGHT_RED color
     public static void errorAny(Logger logger, String message, Object... args) {
         logger.info(BRIGHT_RED + "[ERROR] " + RESET + message, args);
+    }
+    
+    public static String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] saltBytes = new byte[16]; // 16 bytes for salt
+        random.nextBytes(saltBytes);
+        return Base64.getEncoder().encodeToString(saltBytes); // Convert to Base64 string
     }
 }

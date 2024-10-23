@@ -1,6 +1,7 @@
 package lt.ca.javau10.sakila.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -116,7 +117,9 @@ public class RentalService {
 
         rentalRepository.save(rental);
 
-        user.setBalance(balance.subtract(rentalRate).doubleValue());
+        BigDecimal newBalance = balance.subtract(rentalRate);
+        BigDecimal roundedBalance = newBalance.setScale(2, RoundingMode.HALF_UP);
+        user.setBalance(roundedBalance.doubleValue());
         userRepository.save(user);
     }
 }

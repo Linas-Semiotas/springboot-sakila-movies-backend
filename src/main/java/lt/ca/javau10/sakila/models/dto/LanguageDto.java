@@ -1,7 +1,14 @@
 package lt.ca.javau10.sakila.models.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class LanguageDto {
+	
 	private Byte id;
+
+    @NotBlank(message = "Language name is required")
+    @Size(min = 2, max = 50, message = "Language name must be between 2 and 50 characters")
     private String name;
 
     public LanguageDto() {}

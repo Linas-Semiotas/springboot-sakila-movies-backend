@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lt.ca.javau10.sakila.exceptions.InsufficientBalanceException;
 import lt.ca.javau10.sakila.exceptions.InvalidCurrentPasswordException;
 import lt.ca.javau10.sakila.exceptions.ResourceNotFoundException;
 import lt.ca.javau10.sakila.models.Address;
@@ -86,16 +85,13 @@ public class UserService {
 
     @Transactional
     public Double addBalance(String username, Double amount) {
-    	if (amount == null || amount <= 0) { // Validation happens here
-            throw new InsufficientBalanceException("Amount must be greater than 0");
-        }
-    	
         User user = getUserByUsername(username);
         Double newBalance = user.getBalance() + amount;
         user.setBalance(newBalance);
         userRepository.save(user);
         return newBalance;
     }
+
     
     //PROFILE
     //PERSONAL INFO

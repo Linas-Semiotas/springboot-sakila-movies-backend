@@ -2,26 +2,45 @@ package lt.ca.javau10.sakila.models.dto;
 
 import java.util.Objects;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class RegisterDto {
 	
+	@NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
     private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
     private String lastName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     private String email;
+
+    @NotNull(message = "Store ID is required")
     private Byte storeId;
+
+    @NotBlank(message = "Username is required")
+    @Size(min = 4, max = 20, message = "Username must be between 3 and 20 characters")
     private String username;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, max = 64, message = "Password must be between 8 and 64 characters")
     private String password;
-    private Double balance;
     
 	public RegisterDto() {}
 
-	public RegisterDto(String firstName, String lastName, String email, Byte storeId, String username, String password, Double balance) {
+	public RegisterDto(String firstName, String lastName, String email, Byte storeId, String username, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.storeId = storeId;
 		this.username = username;
 		this.password = password;
-		this.balance = balance;
 	}
 
 	public String getFirstName() {
@@ -70,14 +89,6 @@ public class RegisterDto {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(Double balance) {
-		this.balance = balance;
 	}
 
 	@Override

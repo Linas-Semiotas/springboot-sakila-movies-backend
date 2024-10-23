@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,7 +87,7 @@ public class AuthService {
 		
         Address defaultAddress = new Address("", "", "", "", savedCity);
         Address savedAddress = addressRepository.save(defaultAddress);
-
+        
         String encryptedPassword = passwordEncoder.encode(registerDto.getPassword());
 
         boolean adminExists = userRepository.existsByRolesContaining("ADMIN");
@@ -104,6 +105,11 @@ public class AuthService {
     //LOGIN
 	
     public JwtResponse login(LoginDto loginDto) {
+    	Optional<User> userOptional = userRepository.findByUsername(loginDto.getUsername());
+        if (userOptional.isEmpty()) {
+            throw new UsernameNotFoundException("Username not found");
+        }      
+        
     	Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
         );

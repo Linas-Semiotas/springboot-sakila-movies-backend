@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lt.ca.javau10.sakila.security.JwtRequestFilter;
 
 @Configuration
@@ -43,7 +42,7 @@ public class SecurityConfig {
                 configuration.setAllowedOrigins(List.of(allowedOrigins));
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowCredentials(true);
-                configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin", "Cookie"));//"Authorization", "Content-Type", "Accept", "Origin", "Cookie"
+                configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin", "Cookie", "X-Requested-With"));
                 return configuration;
             }))
             .authorizeHttpRequests(authorize -> authorize
@@ -53,12 +52,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/rental/**").authenticated()
                 .anyRequest().permitAll()
-            )
-            .exceptionHandling(exception -> exception
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Unauthorized access");
-                })
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

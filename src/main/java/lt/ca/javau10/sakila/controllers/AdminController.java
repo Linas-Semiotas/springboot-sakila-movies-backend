@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lt.ca.javau10.sakila.models.dto.ActorDto;
 import lt.ca.javau10.sakila.models.dto.AdminUserDto;
 import lt.ca.javau10.sakila.models.dto.CategoryDto;
@@ -60,7 +61,7 @@ public class AdminController {
     }
 
     @PostMapping("/movies")
-    public ResponseEntity<MessageResponse> addMovie(@RequestBody MovieDto movieDto, Principal principal) {
+    public ResponseEntity<MessageResponse> addMovie(@Valid @RequestBody MovieDto movieDto, Principal principal) {
     	String username = principal.getName();
         service.addMovie(movieDto);
         Utils.infoAdmin(logger, "Admin {} added movie: {}", username, movieDto.getTitle());
@@ -68,7 +69,7 @@ public class AdminController {
     }
 
     @PutMapping("/movies/{id}")
-    public ResponseEntity<MessageResponse> updateMovie(@PathVariable Short id, @RequestBody MovieDto movieDto, Principal principal) {
+    public ResponseEntity<MessageResponse> updateMovie(@Valid @PathVariable Short id, @RequestBody MovieDto movieDto, Principal principal) {
     	String username = principal.getName();
         service.updateMovie(id, movieDto);
         Utils.infoAdmin(logger, "Admin {} updated movie with ID {}", username, id);
@@ -92,7 +93,7 @@ public class AdminController {
     }
 
     @PostMapping("/languages")
-    public ResponseEntity<MessageResponse> addLanguage(@RequestBody LanguageDto languageDto, Principal principal) {
+    public ResponseEntity<MessageResponse> addLanguage(@Valid @RequestBody LanguageDto languageDto, Principal principal) {
     	String username = principal.getName();
         service.addLanguage(languageDto);
         Utils.infoAdmin(logger, "Admin {} added language: {}", username, languageDto.getName());
@@ -116,7 +117,7 @@ public class AdminController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<MessageResponse> addCategory(@RequestBody CategoryDto categoryDto, Principal principal) {
+    public ResponseEntity<MessageResponse> addCategory(@Valid @RequestBody CategoryDto categoryDto, Principal principal) {
     	String username = principal.getName();
         service.addCategory(categoryDto);
         Utils.infoAdmin(logger, "Admin {} added category: {}", username, categoryDto.getName());
@@ -140,7 +141,7 @@ public class AdminController {
     }
 
     @PostMapping("/actors")
-    public ResponseEntity<MessageResponse> addActor(@RequestBody ActorDto actorDto, Principal principal) {
+    public ResponseEntity<MessageResponse> addActor(@Valid @RequestBody ActorDto actorDto, Principal principal) {
     	String username = principal.getName();
         service.addActor(actorDto);
         Utils.infoAdmin(logger, "Admin {} added actor: {} {}", username, actorDto.getFirstName(), actorDto.getLastName());

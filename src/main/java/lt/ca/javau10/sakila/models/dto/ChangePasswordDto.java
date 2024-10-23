@@ -1,9 +1,17 @@
 package lt.ca.javau10.sakila.models.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class ChangePasswordDto {
 
-    private String currentPassword;
-    private String newPassword;
+	@NotBlank(message = "Current password is required")
+	@Size(min = 8, max = 64, message = "Current password must be between 8 and 64 characters")
+	private String currentPassword;
+
+	@NotBlank(message = "New password is required")
+	@Size(min = 8, max = 64, message = "New password must be between 8 and 64 characters")
+	private String newPassword;
 
     public ChangePasswordDto() {
     }

@@ -58,7 +58,7 @@ public class AuthControllerTest {
     @Test
     public void testRegisterUser() throws Exception {
         // Mock the RegisterDto input with all fields including balance
-        RegisterDto registerDto = new RegisterDto("John", "Doe", "john.doe@example.com", (byte) 1, "john_doe", "password123", 100.0);
+        RegisterDto registerDto = new RegisterDto("John", "Doe", "john.doe@example.com", (byte) 1, "john_doe", "password123");
 
         // No response is expected from the service method, only a message
         doNothing().when(authService).register(registerDto);

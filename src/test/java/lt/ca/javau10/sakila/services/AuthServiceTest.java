@@ -71,7 +71,7 @@ public class AuthServiceTest {
     // Test for successful registration
     @Test
     public void testRegister_Success() {
-        RegisterDto registerDto = new RegisterDto("John", "Doe", "john@example.com", (byte) 1, "john_doe", "password", 100.0);
+        RegisterDto registerDto = new RegisterDto("John", "Doe", "john@example.com", (byte) 1, "john_doe", "password");
 
         when(userRepository.findByUsername("john_doe")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("password")).thenReturn("encoded_password");
@@ -93,7 +93,7 @@ public class AuthServiceTest {
     // Test if UsernameAlreadyExistsException is thrown when the username is already taken
     @Test
     public void testRegister_UsernameAlreadyExists() {
-        RegisterDto registerDto = new RegisterDto("John", "Doe", "john@example.com", (byte) 1, "john_doe", "password", 100.0);
+        RegisterDto registerDto = new RegisterDto("John", "Doe", "john@example.com", (byte) 1, "john_doe", "password");
 
         when(userRepository.findByUsername("john_doe")).thenReturn(Optional.of(new User()));
 

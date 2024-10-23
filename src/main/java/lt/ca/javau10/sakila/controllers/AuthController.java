@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lt.ca.javau10.sakila.models.dto.LoginDto;
 import lt.ca.javau10.sakila.models.dto.RegisterDto;
 import lt.ca.javau10.sakila.security.responses.JwtResponse;
@@ -44,7 +45,7 @@ public class AuthController {
     //REGISTER
     
     @PostMapping("/register")
-    public ResponseEntity<MessageResponse> registerUser(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody RegisterDto registerDto) {
         service.register(registerDto);
         Utils.infoAuth(logger, "New user registered successfully: {}", registerDto.getUsername());
         return ResponseEntity.ok(new MessageResponse("User created successfully"));
@@ -53,7 +54,7 @@ public class AuthController {
     //LOGIN
     
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+    public ResponseEntity<JwtResponse> createAuthenticationToken(@Valid @RequestBody LoginDto loginDto, HttpServletResponse response) {
     	Utils.infoAuth(logger, "User attempting to log in: {}", loginDto.getUsername());
         JwtResponse jwtResponse = service.login(loginDto);
         

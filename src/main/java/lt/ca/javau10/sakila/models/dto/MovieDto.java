@@ -3,21 +3,64 @@ package lt.ca.javau10.sakila.models.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lt.ca.javau10.sakila.models.Rating;
 
 public class MovieDto {
+	
 	private Short id;
+    
+	@NotBlank(message = "Title is required")
+    @Size(min = 1, max = 255, message = "Title must be between 1 and 255 characters")
     private String title;
+
+    @NotBlank(message = "Description is required")
+    @Size(max = 255, message = "Description must not exceed 1000 characters")
     private String description;
+
+    @NotNull(message = "Release year is required")
+    @Min(value = 1900, message = "Release year must not be before 1900")
+    @Max(value = 2100, message = "Release year must not be after 2100")
     private Integer releaseYear;
+
+    @NotNull(message = "Film length is required")
+    @Positive(message = "Film length must be a positive number")
     private Short filmLength;
+
+    @NotNull(message = "Rating is required")
     private Rating rating;
+
+    @NotBlank(message = "Language is required")
     private String language;
+
+    @NotNull(message = "At least one category is required")
+    @Size(min = 1, message = "At least one category is required")
     private List<String> category;
+
+    @NotBlank(message = "Special features are required")
+    @Size( min = 1, max = 255, message = "Special features must not exceed 255 characters")
     private String specialFeatures;
+
+    @NotNull(message = "Rental rate is required")
+    @DecimalMin(value = "0.01", message = "Rental rate must be at least 0.01")
     private BigDecimal rentalRate;
+
+    @NotNull(message = "Replacement cost is required")
+    @DecimalMin(value = "0.01", message = "Replacement cost must be at least 0.01")
     private BigDecimal replacementCost;
+
+    @NotNull(message = "Rental duration is required")
+    @Positive(message = "Rental duration must be a positive number")
     private Short rentalDuration;
+
+    @NotNull(message = "At least one actor is required")
+    @Size(min = 1, message = "At least one actor is required")
     private List<String> actors;
     
 	public MovieDto() {}
